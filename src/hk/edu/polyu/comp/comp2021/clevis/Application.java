@@ -11,6 +11,7 @@ public class Application {
         Clevis clevis = new Clevis();
         Scanner scanner = new Scanner(System.in);
         while(clevis.isRunning()) {
+            //
             clevis.request(scanner.nextLine());
             clevis.saveClevisToFile(null);
         }
