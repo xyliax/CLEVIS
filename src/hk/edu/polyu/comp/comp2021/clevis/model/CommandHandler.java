@@ -9,6 +9,7 @@ import java.util.Scanner;
 /**
  *
  */
+// TODO: 15/11/2021 NOT FINISHED!
 class CommandHandler implements Serializable {
 	private boolean active;
 	private boolean undoable;
@@ -43,7 +44,7 @@ class CommandHandler implements Serializable {
 	public void process(String candidate) throws InvalidCommandException {
 		Scanner scanner = new Scanner(candidate);
 		String cmdPart = scanner.next();
-		switch (cmdPart) {
+		/*switch (cmdPart) {
 			case "quit" -> setVar(false, false, null, null, null);
 
 			case "rectangle" -> {
@@ -107,7 +108,7 @@ class CommandHandler implements Serializable {
 			}
 
 			default -> throw new InvalidCommandException("Unknown command " + cmd);
-		}
+		}*/
 	}
 
 	@Override

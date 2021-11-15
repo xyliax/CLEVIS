@@ -19,7 +19,8 @@ public class Clevis implements Serializable {
 	private static final String FILE_SUFFIX = ".clevis";
 	private final ShapeManager shapeManager;
 	private final CommandHandler commandHandler;
-	private final Stack<ShapeManager> history;
+	private Stack<ShapeManager> historyStack;
+	private Stack<ShapeManager> tempStack;
 	private String txtLogFile;
 	private String htmlLogFile;
 	private Date createTime;
@@ -30,13 +31,20 @@ public class Clevis implements Serializable {
 	public Clevis() {
 		shapeManager = new ShapeManager();
 		commandHandler = new CommandHandler();
-		history = new Stack<>();
+		historyStack = new Stack<>();
+		tempStack = new Stack<>();
 		setCreateTime(new Date());
 		System.out.println("Clevis model initialized");
 		System.out.println(this);
 		setLogFiles("log.html", "log.txt");
 	}
 
+	/**
+	 * @param args args
+	 */
+	public static void main(String[] args) {
+		Clevis clevis = new Clevis();
+	}
 
 	/**
 	 * Generally Clevis works depending on a command sequence.
@@ -54,14 +62,29 @@ public class Clevis implements Serializable {
 		try {
 			commandHandler.process(aCommand);
 			String name = commandHandler.getCmd();
-			Object[] arguments = commandHandler.getArguments().toArray();
+			Object[] arguments = commandHandler.getArguments() == null ?
+					null : commandHandler.getArguments().toArray();
 			Class<?>[] paraTypes = commandHandler.getParaTypes();
-			Method method = ShapeManager.class.getDeclaredMethod(name, paraTypes);
-			System.out.println(commandHandler);
-			method.invoke(shapeManager, arguments);
-			System.out.println("----invokes " + method);
+			if (!commandHandler.isActive())
+				return;
+			if (name.equals("redo")) {
+				// TODO: 15/11/2021
+			} else if (name.equals("undo")) {
+				// TODO: 15/11/2021
+			} else {
+				Method method = ShapeManager.class.getDeclaredMethod(name, paraTypes);
+				System.out.println(commandHandler);
+				method.invoke(shapeManager, arguments);
+				System.out.println("----invokes " + method);
+			}
 			logCommand(commandHandler);
+			if (commandHandler.isUndoable()) {
+				// TODO: 15/11/2021
+				historyStack.push(shapeManager.getClone());
+				tempStack = new Stack<>();
+			}
 		} catch (InvalidCommandException invalidCommandException) {
+			// TODO: 15/11/2021 details
 			System.out.println("invalid command!");
 		} catch (ReflectiveOperationException reflectiveOperationException) {
 			System.out.println("Bugs detected >>> This line is not suppose to be here!");
@@ -70,12 +93,10 @@ public class Clevis implements Serializable {
 		}
 	}
 
-
 	@Override
 	public String toString() {
 		return super.toString() + "Created at " + getCreateTime();
 	}
-
 
 	/**
 	 * The running status is determined by the command handler.
@@ -107,7 +128,6 @@ public class Clevis implements Serializable {
 		this.createTime = createTime;
 	}
 
-
 	private void setLogFiles(String htmlName, String txtName) {
 		htmlLogFile = htmlName;
 		txtLogFile = txtName;
@@ -128,13 +148,6 @@ public class Clevis implements Serializable {
 		} catch (IOException ioException) {
 			System.out.println("Unable to log command: " + aCommand);
 		}
-	}
-
-	/**
-	 * @param args args
-	 */
-	public static void main(String[] args) {
-		Clevis clevis = new Clevis();
 	}
 
 	/*

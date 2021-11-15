@@ -21,7 +21,7 @@ import java.util.List;
  * @see Shape
  * @see hk.edu.polyu.comp.comp2021.clevis.model.Clevis
  */
-public class ShapeManager implements Serializable {
+public class ShapeManager implements Serializable, Cloneable {
 
 	/**
 	 * The default value for point radius used in picking.
@@ -56,6 +56,20 @@ public class ShapeManager implements Serializable {
 		shapeStorage = new HashMap<>();
 		Z_ORDER = 0;
 		System.out.println("ShapeManager initialized");
+	}
+
+	/**
+	 * Returns an exact copy of this shape manager.
+	 *
+	 * @return the exact copy of this shape manager
+	 */
+	public ShapeManager getClone() {
+		try {
+			return (ShapeManager) this.clone();
+		} catch (CloneNotSupportedException cloneNotSupportedException) {
+			System.out.println("Unexpected CloneNotSupportedException!");
+			return null;
+		}
 	}
 
 
@@ -310,7 +324,7 @@ public class ShapeManager implements Serializable {
 		Shape shape = shapeStorage.get(n_arg);
 		float x_p = shape.leftMost(), y_p = shape.upMost(),
 				w_p = shape.rightMost() - x_p, h_p = y_p - shape.downMost();
-		Rectangle box =  new Rectangle(-1, "Bounding box for " + n_arg, x_p, y_p, w_p, h_p);
+		Rectangle box = new Rectangle(-1, "Bounding box for " + n_arg, x_p, y_p, w_p, h_p);
 		System.out.println(box);
 		System.out.printf("The area of the bounding box is %.2f%n", w_p * h_p);
 	}
@@ -362,4 +376,8 @@ public class ShapeManager implements Serializable {
 		}
 	}
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }

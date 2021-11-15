@@ -20,10 +20,20 @@ public class Application {
 		// FIXME: 10/11/2021
 		Scanner scanner = new Scanner(System.in);
 		while (clevis.isRunning()) {
+			if (scanner.nextLine().strip().equalsIgnoreCase("man")) {
+				displayUserManual();
+				continue;
+			}
 			clevis.request(scanner.nextLine());
 		}
 	}
 
+	private static void displayUserManual() {
+		System.out.println("""
+				........................CLEVIS-USER-MANUAL........................
+								
+				""");
+	}
 }
 
 
