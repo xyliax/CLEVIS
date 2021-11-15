@@ -46,6 +46,7 @@ abstract class SimpleShape extends Shape {
 				|| y_arg > CY_MAX_VALUE || y_arg < CY_MIN_VALUE)
 			throw new IllegalArgumentException("Failure! Defining point out of map!");
 
+		setaGroup(false);
 		setX(x_arg);
 		setY(y_arg);
 	}

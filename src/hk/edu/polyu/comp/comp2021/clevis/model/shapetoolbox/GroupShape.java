@@ -26,6 +26,7 @@ class GroupShape extends Shape {
 	 */
 	GroupShape(int z_arg, String n_arg) {
 		super(z_arg, n_arg);
+		setaGroup(true);
 		groupMembers = new ArrayList<>();
 	}
 

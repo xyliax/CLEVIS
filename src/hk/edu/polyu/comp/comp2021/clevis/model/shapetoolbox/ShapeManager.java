@@ -1,6 +1,6 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
-import hk.edu.polyu.comp.comp2021.clevis.model.ClevisModel;
+import hk.edu.polyu.comp.comp2021.clevis.model.ClevisController;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ClevisException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalNameException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InGroupMovementException;
@@ -17,7 +17,7 @@ import java.util.*;
  * <p>It sets some basic rules of shape-relevent actions</p>
  *
  * @see Shape
- * @see ClevisModel
+ * @see ClevisController
  */
 public class ShapeManager implements Serializable, Cloneable {
 
@@ -53,7 +53,7 @@ public class ShapeManager implements Serializable, Cloneable {
 	public ShapeManager() {
 		shapeStorage = new HashMap<>();
 		Z_ORDER = 0;
-		System.out.println("ShapeManager initialized");
+		System.out.println(">>> ShapeManager initialized");
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ShapeManager implements Serializable, Cloneable {
 				x2_arg = (float) args[3], y2_arg = (float) args[4];
 
 		if (containsShape(n_arg))
-			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
+			throw new IllegalNameException(String.format("Duplicate name! '%s' has been defined!", n_arg));
 
 		LineSegment newLineSegment = new LineSegment(Z_ORDER, n_arg, x1_arg, y1_arg, x2_arg, y2_arg);
 		shapeStorage.put(newLineSegment.getName(), newLineSegment);
@@ -285,7 +285,7 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws InGroupMovementException when attemting to move grouped shapes
 	 * @see IntersectionJudge
 	 */
-	public boolean intersect(List<Object> args) throws ClevisException {
+	public boolean hasIntersection(List<Object> args) throws ClevisException {
 		String n1_arg = (String) args.get(0);
 		String n2_arg = (String) args.get(1);
 
@@ -371,11 +371,15 @@ public class ShapeManager implements Serializable, Cloneable {
 	private boolean intersect(Shape shapeOne, Shape shapeTwo) {
 		Class<? extends Shape> classOne = shapeOne.getClass();
 		Class<? extends Shape> classTwo = shapeTwo.getClass();
+		if (shapeOne.isaGroup())
+			return ((GroupShape) shapeOne).getGroupMembers().stream().anyMatch(m -> intersect(m, shapeTwo));
+		if (shapeTwo.isaGroup())
+			return ((GroupShape) shapeOne).getGroupMembers().stream().anyMatch(m -> intersect(m, shapeTwo));
 		try {
 			Method method = IntersectionJudge.class.getDeclaredMethod("intersects", classOne, classTwo);
 			return (boolean) method.invoke(IntersectionJudge.class, shapeOne, shapeTwo);
 		} catch (ReflectiveOperationException reflectiveOperationException) {
-			System.out.println("Bugs detected >>> This line is not suppose to be here!");
+			reflectiveOperationException.printStackTrace();
 			return false;
 		}
 	}

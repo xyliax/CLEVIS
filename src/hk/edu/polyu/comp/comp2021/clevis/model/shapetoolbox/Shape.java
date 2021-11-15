@@ -34,7 +34,14 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	 * z_order for this shape.
 	 */
 	protected int zOrder;
-	private Shape grouper;
+	/**
+	 * The gouper of this shape, default to be itself.
+	 */
+	protected Shape grouper;
+	/**
+	 * whther this shape is a group shape.
+	 */
+	protected boolean aGroup;
 
 
 	/**
@@ -125,6 +132,24 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	 */
 	void setGrouper(Shape grouper_arg) {
 		grouper = grouper_arg;
+	}
+
+	/**
+	 * Getter of aGroup.
+	 *
+	 * @return whether it is a group
+	 */
+	boolean isaGroup() {
+		return aGroup;
+	}
+
+	/**
+	 * Setter of aGroup.
+	 *
+	 * @param aGroup whether it is a group
+	 */
+	void setaGroup(boolean aGroup) {
+		this.aGroup = aGroup;
 	}
 
 	/**

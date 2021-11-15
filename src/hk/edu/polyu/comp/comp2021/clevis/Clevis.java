@@ -1,6 +1,7 @@
 package hk.edu.polyu.comp.comp2021.clevis;
 
-import hk.edu.polyu.comp.comp2021.clevis.model.ClevisModel;
+import hk.edu.polyu.comp.comp2021.clevis.model.ClevisController;
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ClevisException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
 
 import java.util.Scanner;
@@ -29,10 +30,19 @@ public class Clevis {
 		if (!txtName.matches(".+\\.txt"))
 			txtName += ".txt";
 
-		ClevisModel clevis = new ClevisModel(htmlName, txtName);
-		System.out.println("CLEVIS session starts!");
-		System.out.println("----------------------------------------------------------------------------");
-		Scanner scanner = new Scanner(System.in);
+		ClevisController clevis = new ClevisController(htmlName, txtName);
+		Scanner scanner;
+		System.out.println("""
+							|---------------------------|------------------------------------------------------|
+							| C L E V I S session starts| Signature: Group 9 COMP2021 11/2021 Group project    |
+				|----------------------------------------------------------------------------------------------|
+				| **     *     **  ********   **          *********   **********      *       *      ********  |
+				|  **   * *   **   **         **          **          **      **     ***     ***     **        |
+				|   ** ** ** **    ********   **          **          **      **    ** **   ** **    ********  |
+				|    ***   ***     **         **          **          **      **   **   ** **   **   **        |
+				|     *     *      ********   **********  *********   **********  **     **      **  ********  |
+				|______________________________________________________________________________________________|
+							""");
 		while (clevis.isRunning()) {
 			System.out.print(">>> Clevis % ");
 			scanner = new Scanner(System.in);
@@ -47,8 +57,20 @@ public class Clevis {
 			try {
 				clevis.request(input);
 			} catch (InvalidCommandException invalidCommandException) {
-				System.out.println("Invalid command! " + invalidCommandException.getMessage());
-				System.out.println("'man [-c]' to display the user manual.");
+				System.out.printf("""
+						**********************************************************************
+						*	Invalid Command!                                                 *
+						*-------->%s
+						*	man [-c] to display the user manual [-c]: command                *
+						**********************************************************************
+						%n""", invalidCommandException.getMessage());
+			} catch (ClevisException clevisException) {
+				System.out.printf("""
+						**********************************************************************
+						*	Exception caught in session!                                     *
+						*-------->%s
+						**********************************************************************
+						%n""", clevisException.getMessage());
 			}
 		}
 	}
