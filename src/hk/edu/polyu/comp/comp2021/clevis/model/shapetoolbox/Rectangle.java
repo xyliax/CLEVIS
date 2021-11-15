@@ -1,5 +1,7 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
+
 /**
  * The class for rectangle.
  * <p>The defining point of a rectangle is its top-left corner.</p>

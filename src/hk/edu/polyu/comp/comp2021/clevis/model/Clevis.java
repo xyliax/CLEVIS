@@ -1,13 +1,15 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
 import hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.List;
+import java.util.Stack;
 
 /**
  * model class
@@ -17,10 +19,10 @@ public class Clevis implements Serializable {
 	private static final String FILE_SUFFIX = ".clevis";
 	private final ShapeManager shapeManager;
 	private final CommandHandler commandHandler;
+	private final Stack<ShapeManager> history;
 	private String txtLogFile;
 	private String htmlLogFile;
 	private Date createTime;
-
 
 	/**
 	 *
@@ -28,35 +30,52 @@ public class Clevis implements Serializable {
 	public Clevis() {
 		shapeManager = new ShapeManager();
 		commandHandler = new CommandHandler();
+		history = new Stack<>();
 		setCreateTime(new Date());
 		System.out.println("Clevis model initialized");
 		System.out.println(this);
 		setLogFiles("log.html", "log.txt");
 	}
 
-	/**
-	 * @param args args
-	 */
-	public static void main(String[] args) {
-		Clevis clevis = new Clevis();
-	}
 
-	private void setLogFiles(String htmlName, String txtName) {
-		htmlLogFile = htmlName;
-		txtLogFile = txtName;
+	/**
+	 * Generally Clevis works depending on a command sequence.
+	 * <p>When a command is received, it will trandfer it to a command handler.</p>
+	 * <p>The command handler processes it and set status for Clevis.</p>
+	 * <p>Finaly the command handler is decoded and translated into detailed operations.</p>
+	 * <p>The connection between the users and Clevis model.</p>
+	 *
+	 * @param aCommand the command String sent by the application
+	 * @see CommandHandler
+	 * @see ShapeManager
+	 * @see hk.edu.polyu.comp.comp2021.clevis.Application
+	 */
+	public void request(String aCommand) {
 		try {
-			new FileOutputStream(htmlLogFile);
-			new FileOutputStream(txtLogFile);
-			System.out.println(">>> Success - Finish setting up log files");
-		} catch (FileNotFoundException ignored) {
-			System.out.println(">>> Error - Unable to set up log files");
+			commandHandler.process(aCommand);
+			String name = commandHandler.getCmd();
+			Object[] arguments = commandHandler.getArguments().toArray();
+			Class<?>[] paraTypes = commandHandler.getParaTypes();
+			Method method = ShapeManager.class.getDeclaredMethod(name, paraTypes);
+			System.out.println(commandHandler);
+			method.invoke(shapeManager, arguments);
+			System.out.println("----invokes " + method);
+			logCommand(commandHandler);
+		} catch (InvalidCommandException invalidCommandException) {
+			System.out.println("invalid command!");
+		} catch (ReflectiveOperationException reflectiveOperationException) {
+			System.out.println("Bugs detected >>> This line is not suppose to be here!");
+		} finally {
+			commandHandler.reset();
 		}
 	}
 
-	private void logCommand(String aCommand) throws IOException {
-		FileOutputStream txtStream = new FileOutputStream(txtLogFile, true);
-		txtStream.write((aCommand + "\n").getBytes());
+
+	@Override
+	public String toString() {
+		return super.toString() + "Created at " + getCreateTime();
 	}
+
 
 	/**
 	 * The running status is determined by the command handler.
@@ -66,49 +85,6 @@ public class Clevis implements Serializable {
 	 */
 	public boolean isRunning() {
 		return commandHandler.isActive();
-	}
-
-	private void setRunning(boolean status) {
-		commandHandler.setActive(true);
-	}
-
-
-	/**
-	 * Generally Clevis works depending on a command sequence.
-	 * <p>When a command is received, it will trandfer it to a command handler.</p>
-	 * <p>The command handler processes it and set status for Clevis.</p>
-	 * <p>Finaly the command handler is decoded and translated into detailed operations.</p>
-	 *
-	 * @param aCommand the command String sent by the application
-	 * @see CommandHandler
-	 * @see #commandHandler
-	 */
-	// FIXME: reflection!
-	public void request(String aCommand) {
-		commandHandler.process(aCommand);
-		String cmd = commandHandler.getCmd();
-		List<Object> args = commandHandler.getArguments();
-		if (commandHandler.isCmdValid()) {
-			if (commandHandler.isAllValid()) {
-				// TODO: 11/11/2021  
-				try {
-					logCommand(aCommand);
-				} catch (IOException ignored) {
-					System.out.println(">>> Error - " + aCommand + " fails to log");
-				}
-			} else {
-				System.out.printf(">>> Invalid arguments in '%s'%n", aCommand);
-				System.out.println(commandHandler.getMessage());
-			}
-		} else {
-			System.out.printf(">>> Invalid command '%s'%n", aCommand);
-		}
-		commandHandler.reset();
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + "Created at " + getCreateTime();
 	}
 
 	/**
@@ -131,6 +107,35 @@ public class Clevis implements Serializable {
 		this.createTime = createTime;
 	}
 
+
+	private void setLogFiles(String htmlName, String txtName) {
+		htmlLogFile = htmlName;
+		txtLogFile = txtName;
+		try {
+			new FileOutputStream(htmlLogFile);
+			new FileOutputStream(txtLogFile);
+			System.out.println(">>> Success - Finish setting up log files");
+		} catch (FileNotFoundException ignored) {
+			System.out.println(">>> Error - Unable to set up log files");
+		}
+	}
+
+	private void logCommand(CommandHandler commandHandler) {
+		String aCommand = commandHandler.toString();
+		try {
+			FileOutputStream txtStream = new FileOutputStream(txtLogFile, true);
+			txtStream.write((aCommand + '\n').getBytes());
+		} catch (IOException ioException) {
+			System.out.println("Unable to log command: " + aCommand);
+		}
+	}
+
+	/**
+	 * @param args args
+	 */
+	public static void main(String[] args) {
+		Clevis clevis = new Clevis();
+	}
 
 	/*
 	private void test() {
@@ -174,4 +179,6 @@ public class Clevis implements Serializable {
 		}
 	}
 	*/
+
+
 }

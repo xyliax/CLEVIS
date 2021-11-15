@@ -1,6 +1,12 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ClevisException;
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalNameException;
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InGroupMovementException;
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
+
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,27 +24,27 @@ import java.util.List;
 public class ShapeManager implements Serializable {
 
 	/**
+	 * The default value for point radius used in picking.
+	 */
+	public static final float DEF_PD = 0.05f;
+	/**
 	 * The maximum bound of the X-coordinate.
 	 */
 	protected static final float CX_MAX_VALUE = Float.MAX_VALUE;
-
 	/**
 	 * The minimum bound of the X-coordinate.
 	 */
 	protected static final float CX_MIN_VALUE = Float.MIN_VALUE;
-
 	/**
 	 * The maximum bound of the Y-coordinate.
 	 */
 	protected static final float CY_MAX_VALUE = Float.MAX_VALUE;
-
 	/**
 	 * The minimum bound of the Y-coordinate.
 	 */
 	protected static final float CY_MIN_VALUE = Float.MIN_VALUE;
-
+	private static final float pointRadius = DEF_PD;
 	private final HashMap<String, Shape> shapeStorage;
-	private final HashMap<String, Shape> shapeTrashcan;
 	private int Z_ORDER;
 
 
@@ -48,7 +54,6 @@ public class ShapeManager implements Serializable {
 	 */
 	public ShapeManager() {
 		shapeStorage = new HashMap<>();
-		shapeTrashcan = new HashMap<>();
 		Z_ORDER = 0;
 		System.out.println("ShapeManager initialized");
 	}
@@ -73,6 +78,7 @@ public class ShapeManager implements Serializable {
 		LineSegment newLineSegment = new LineSegment(Z_ORDER, n_arg, x1_arg, y1_arg, x2_arg, y2_arg);
 		shapeStorage.put(newLineSegment.getName(), newLineSegment);
 		Z_ORDER++;
+
 	}
 
 
@@ -185,7 +191,7 @@ public class ShapeManager implements Serializable {
 
 		GroupShape grouper = (GroupShape) shapeStorage.get(n_arg);
 		grouper.disband();
-		discard((String) args[0]);
+		shapeStorage.remove(n_arg);
 	}
 
 
@@ -195,7 +201,6 @@ public class ShapeManager implements Serializable {
 	 * @param args arguments from outside, will be split into correct parts
 	 * @throws IllegalNameException     when the name has not been defined
 	 * @throws InGroupMovementException when attempting to move grouped shapes
-	 * @see #discard(String)
 	 */
 	public void deleteShape(Object... args) throws ClevisException {
 		String n_arg = (String) args[0];
@@ -210,7 +215,7 @@ public class ShapeManager implements Serializable {
 			for (Shape aMember : ((GroupShape) shapeToBeDeleted).getGroupMembers())
 				deleteShape(aMember.getName());
 		}
-		discard(n_arg);
+		shapeStorage.remove(n_arg);
 	}
 
 
@@ -237,15 +242,79 @@ public class ShapeManager implements Serializable {
 	}
 
 	/**
-	 * @param args
-	 * @throws ClevisException
+	 * @param args arguments from outside, will be split into correct parts
+	 * @throws ShapeOutOfMapException when attempting to move out of map
+	 * @see #moveShape(Object...)
 	 */
-	public void pickMoveShape(Object... args) throws ClevisException{
-		float x = (float) args[0], y = (float) args[1],
-				dx = (float) args[2], dy = (float) args[3];
+	public void pickMoveShape(Object... args) throws ClevisException {
+		float x_arg = (float) args[0], y_arg = (float) args[1],
+				dx_arg = (float) args[2], dy_arg = (float) args[3];
 
-		Circle pickPoint;
+		Circle pickPoint = new Circle(x_arg, y_arg, pointRadius);
+		List<Shape> shapeList = new ArrayList<>(shapeStorage.values());
+		shapeList.sort(Shape::compareTo);
+		for (Shape shape : shapeList) {
+			if (intersect(shape, pickPoint)) {
+				System.out.println(shape + " is picked!");
+				moveShape(shape, dx_arg, dy_arg);
+				return;
+			}
+		}
+		System.out.println("No shape has been picked-and-moved!");
 	}
+
+	/**
+	 * Determine whether two shape objects have any intersections.
+	 * Use reflective operations to invoke the correct methods defined in IntersectionJudge.
+	 *
+	 * @param args arguments from outside, will be split into correct parts
+	 * @return whether the two shapes have any intersections.
+	 * @throws IllegalNameException when some names are not defined
+	 * @see IntersectionJudge
+	 */
+	public boolean intersect(Object... args) throws ClevisException {
+		String n1_arg = (String) args[0];
+		String n2_arg = (String) args[1];
+
+		if (!containsShape(n1_arg))
+			throw new IllegalNameException(n1_arg + " has not been defined!");
+		if (!containsShape(n2_arg))
+			throw new IllegalNameException(n2_arg + " has not been defined!");
+
+		Shape shapeOne = shapeStorage.get(n1_arg);
+		Shape shapeTwo = shapeStorage.get(n2_arg);
+		Class<? extends Shape> classOne = shapeOne.getClass();
+		Class<? extends Shape> classTwo = shapeTwo.getClass();
+		try {
+			Method method = IntersectionJudge.class.getDeclaredMethod("intersects", classOne, classTwo);
+			return (boolean) method.invoke(IntersectionJudge.class, shapeOne, shapeTwo);
+		} catch (ReflectiveOperationException reflectiveOperationException) {
+			System.out.println("Bugs detected >>> This line is not suppose to be here!");
+			return false;
+		}
+	}
+
+
+	/**
+	 * Prints out a rectangle and its area representing the bounding box of a shape.
+	 *
+	 * @param args arguments from outside, will be split into correct parts
+	 * @throws IllegalNameException when the name has not been defined
+	 */
+	public void boundingbox(Object... args) throws ClevisException {
+		String n_arg = (String) args[0];
+
+		if (!containsShape(n_arg))
+			throw new IllegalNameException(n_arg + " has not been defined!");
+
+		Shape shape = shapeStorage.get(n_arg);
+		float x_p = shape.leftMost(), y_p = shape.upMost(),
+				w_p = shape.rightMost() - x_p, h_p = y_p - shape.downMost();
+		Rectangle box =  new Rectangle(-1, "Bounding box for " + n_arg, x_p, y_p, w_p, h_p);
+		System.out.println(box);
+		System.out.printf("The area of the bounding box is %.2f%n", w_p * h_p);
+	}
+
 
 	/**
 	 * Lists all existing shape.
@@ -272,27 +341,17 @@ public class ShapeManager implements Serializable {
 	}
 
 
-	/**
-	 * This method judges if a shape is grouped.
-	 *
-	 * @param n the name of a shape
-	 * @return whether a shape is grouped
-	 * @see Shape#isGrouped()
-	 */
-	public boolean isGroupedShape(String n) {
+	private boolean isGroupedShape(String n) {
 		return shapeStorage.get(n).isGrouped();
 	}
-
 
 	private boolean containsShape(String n) {
 		return shapeStorage.containsKey(n);
 	}
 
-
 	private void listWithIndents(String n, String indents) {
 		System.out.println(indents + shapeStorage.get(n));
 	}
-
 
 	private void listGroup(String n, String indents) {
 		GroupShape grouper = (GroupShape) shapeStorage.get(n);
@@ -303,10 +362,4 @@ public class ShapeManager implements Serializable {
 		}
 	}
 
-
-	private void discard(String n) {
-		Shape shapeToBeDiscarded = shapeStorage.get(n);
-		shapeStorage.remove(n);
-		shapeTrashcan.put(shapeToBeDiscarded.getName(), shapeToBeDiscarded);
-	}
 }

@@ -3,7 +3,7 @@ package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 /**
  *
  */
-abstract class IntersectionJudge {
+interface IntersectionJudge {
 	/**
 	 * @param ls1
 	 * @param ls2

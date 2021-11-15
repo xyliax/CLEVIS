@@ -1,32 +1,26 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
+
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 /**
- * We consider every valid command into 2 parts : cmd(String) + arguments(List)
- * for example, "rectangle r1 1 2 3 4" : "rectangle" + "[r1, 1, 2, 3, 4]"
- * after process(), set 'active', 'valid' status, and command, arguments
- * outside world can get these and call relevant methods
- * Help me!
- * Noted that even if the command is invalid, you still need to set command,
- * for example, if the command is "recta r1 1 2 3 4", set command = "recta"
+ *
  */
 class CommandHandler implements Serializable {
 	private boolean active;
-	private boolean cmdValid;
-	private boolean allValid;
+	private boolean undoable;
 	private String cmd;
 	private List<Object> arguments;
-	private String message;
+	private Class<?>[] paraTypes;
 
 	/**
 	 *
 	 */
 	CommandHandler() {
-		setVar(true, false, false, null);
+		setVar(true, false, null, null, null);
 		System.out.println("CommandHandler initialized");
 	}
 
@@ -34,26 +28,144 @@ class CommandHandler implements Serializable {
 	 *
 	 */
 	public void reset() {
-		setVar(true, false, false, null);
-		setMessage("Default Status at " + new Date());
+		setVar(isActive(), isUndoable(), null, null, null);
 	}
 
+
+	/**
+	 * Process on a command string, and set status.
+	 * <p>This is the core of the command handler, it determines if a command is valid.</p>
+	 *
+	 * @param candidate the full command to be processed
+	 * @throws InvalidCommandException when the command is invalid
+	 * @see #setVar(boolean, String, List, Class[])
+	 */
+	public void process(String candidate) throws InvalidCommandException {
+		Scanner scanner = new Scanner(candidate);
+		String cmdPart = scanner.next();
+		switch (cmdPart) {
+			case "quit" -> setVar(false, false, null, null, null);
+
+			case "rectangle" -> {
+				setVar();
+			}
+			//add missing code
+			case "line" -> {
+				setVar();
+			}
+			//add missing code
+			case "circle" -> {
+				setVar();
+			}
+			//add missing code
+			case "square" -> {
+				setVar();
+			}
+			//add missing code
+			case "group" -> {
+				setVar();
+			}
+			//add missing code
+			case "ungroup" -> {
+				setVar();
+			}
+			//add missing code
+			case "delete" -> {
+				setVar();
+			}
+			//add missing code
+			case "boundingbox" -> {
+				setVar();
+			}
+			//add missing code
+			case "move" -> {
+				setVar();
+			}
+			//add missing code
+			case "pick-and-move" -> {
+				setVar();
+			}
+			//add missing code
+			case "intersect" -> {
+				setVar();
+			}
+			//add missing code
+			case "list" -> {
+				setVar();
+			}
+			//add missing code
+			case "listall" -> {
+				setVar();
+			}
+			//add missing code
+			case "undo" -> {
+				setVar();
+			}
+
+			case "redo" -> {
+				setVar();
+			}
+
+			default -> throw new InvalidCommandException("Unknown command " + cmd);
+		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(cmd);
+		for (Object arg : arguments)
+			stringBuilder.append(" ").append(arg);
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * Getter of active. Determine if Clevis is running.
+	 *
+	 * @return whether it is activated
+	 * @see #active
+	 */
 	boolean isActive() {
 		return active;
 	}
 
-	void setActive(boolean active) {
+	private void setActive(boolean active) {
 		this.active = active;
 	}
 
+	/**
+	 * Getter of undoable.
+	 *
+	 * @return whether the command is undoable
+	 */
+	boolean isUndoable() {
+		return undoable;
+	}
+
+	private void setUndoable(boolean undoable) {
+		this.undoable = undoable;
+	}
+
+	/**
+	 * Getter of cmd.
+	 *
+	 * @return the cmd part of this command as a List
+	 * @see #cmd
+	 */
 	String getCmd() {
 		return cmd;
 	}
 
-	private void setCommand(String cmd) {
+	private void setCmd(String cmd) {
 		this.cmd = cmd;
 	}
 
+	/**
+	 * Getter of arguments.
+	 *
+	 * @return the arguments part of this command
+	 * @see #arguments
+	 */
 	List<Object> getArguments() {
 		return arguments;
 	}
@@ -62,83 +174,26 @@ class CommandHandler implements Serializable {
 		this.arguments = arguments;
 	}
 
-	boolean isAllValid() {
-		return allValid;
+	/**
+	 * Getter of paraTypes.
+	 *
+	 * @return the parameter types of this command
+	 * @see #paraTypes
+	 */
+	Class<?>[] getParaTypes() {
+		return paraTypes;
 	}
 
-	private void setAllValid(boolean allValid) {
-		this.allValid = allValid;
+	private void setParaTypes(Class<?>[] paraTypes) {
+		this.paraTypes = paraTypes;
 	}
 
-	public boolean isCmdValid() {
-		return cmdValid;
-	}
-
-	private void setCmdValid(boolean cmdValid) {
-		this.cmdValid = cmdValid;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	private void setMessage(String message) {
-		this.message = message;
-	}
-
-	public void process(String candidate) {
-		setAllValid(true);
-		int index = 0;
-		StringBuilder cmdBuilder = new StringBuilder();
-		StringBuilder argBuilder = new StringBuilder();
-		while (index < candidate.length() && candidate.charAt(index) == ' ')
-			index++;
-		while (index < candidate.length() && candidate.charAt(index) != ' ')
-			cmdBuilder.append(candidate.charAt(index++));
-		String cmd = cmdBuilder.toString().toLowerCase();
-		if (cmd.equals("quit")) {
-			//add missing code
-		} else if (cmd.equals("rectangle")) {
-			//add missing code
-		} else if (cmd.equals("line")) {
-			//add missing code
-		} else if (cmd.equals("circle")) {
-			//add missing code
-		} else if (cmd.equals("square")) {
-			//add missing code
-		} else if (cmd.equals("group")) {
-			//add missing code
-		} else if (cmd.equals("ungroup")) {
-			//add missing code
-		} else if (cmd.equals("delete")) {
-			//add missing code
-		} else if (cmd.equals("boundingbox")) {
-			//add missing code
-		} else if (cmd.equals("move")) {
-			//add missing code
-		} else if (cmd.equals("pick-and-move")) {
-			//add missing code
-		} else if (cmd.equals("intersect")) {
-			//add missing code
-		} else if (cmd.equals("list")) {
-			//add missing code
-		} else if (cmd.equals("listall")) {
-			//add missing code
-		} else if (cmd.equals("save")) {
-			//don't bother this
-			//skip it
-		} else {
-			//...
-		}
-	}
-
-	private void setVar(boolean active, boolean cmdValid, boolean allValid,
-						String command, Object... vars) {
+	private void setVar(boolean active, boolean undo, String cmd, List<Object> args, Class<?>[] types) {
 		setActive(active);
-		setCmdValid(cmdValid);
-		setAllValid(allValid);
-		setCommand(command);
-		setArguments(Collections.singletonList(vars));
+		setUndoable(undo);
+		setCmd(cmd);
+		setArguments(args);
+		setParaTypes(types);
 	}
 
 }
