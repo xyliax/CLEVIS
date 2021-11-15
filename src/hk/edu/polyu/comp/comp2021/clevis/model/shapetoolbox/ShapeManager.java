@@ -1,5 +1,6 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.ClevisModel;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ClevisException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalNameException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InGroupMovementException;
@@ -7,10 +8,7 @@ import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The class for shape management.
@@ -19,7 +17,7 @@ import java.util.List;
  * <p>It sets some basic rules of shape-relevent actions</p>
  *
  * @see Shape
- * @see hk.edu.polyu.comp.comp2021.clevis.model.Clevis
+ * @see ClevisModel
  */
 public class ShapeManager implements Serializable, Cloneable {
 
@@ -126,10 +124,10 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws IllegalNameException   when the name has been defined
 	 * @see Rectangle#Rectangle(int, String, float, float, float, float)
 	 */
-	public void createRectangle(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
-		float x_arg = (float) args[1], y_arg = (float) args[2],
-				w_arg = (float) args[3], h_arg = (float) args[4];
+	public void createRectangle(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
+		float x_arg = (float) args.get(1), y_arg = (float) args.get(2),
+				w_arg = (float) args.get(3), h_arg = (float) args.get(4);
 
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
@@ -148,10 +146,10 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws IllegalNameException   when the name has been defined
 	 * @see Square#Square(int, String, float, float, float)
 	 */
-	public void createSquare(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
-		float x_arg = (float) args[1], y_arg = (float) args[2],
-				l_arg = (float) args[3];
+	public void createSquare(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
+		float x_arg = (float) args.get(1), y_arg = (float) args.get(2),
+				l_arg = (float) args.get(3);
 
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
@@ -169,16 +167,16 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws IllegalNameException     when the name has been defined
 	 * @throws InGroupMovementException when attempting to move grouped shapes
 	 */
-	public void createGroup(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
-		Object[] ni_args = Arrays.copyOfRange(args, 1, args.length);
+	public void createGroup(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
+		Object[] ni_args = Arrays.copyOfRange(args.toArray(), 1, args.size());
 
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
 		if (Arrays.stream(ni_args).anyMatch(ni -> isGroupedShape((String) ni)))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
 
-		GroupShape newGroup = new GroupShape(Z_ORDER++, (String) args[0]);
+		GroupShape newGroup = new GroupShape(Z_ORDER++, n_arg);
 		shapeStorage.put(newGroup.getName(), newGroup);
 		for (Object ni : ni_args)
 			newGroup.invite(shapeStorage.get((String) ni));
@@ -193,17 +191,16 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws InGroupMovementException when attempting to move grouped shapes
 	 * @see GroupShape#disband()
 	 */
-	public void disbandGroup(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
+	public void disbandGroup(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
 
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(n_arg + " has not been defined!");
-		if (!(shapeStorage.get(n_arg) instanceof GroupShape))
+		if (!(shapeStorage.get(n_arg) instanceof GroupShape grouper))
 			throw new IllegalNameException(n_arg + " is not a GroupShape!");
 		if (isGroupedShape(n_arg))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
 
-		GroupShape grouper = (GroupShape) shapeStorage.get(n_arg);
 		grouper.disband();
 		shapeStorage.remove(n_arg);
 	}
@@ -216,8 +213,8 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws IllegalNameException     when the name has not been defined
 	 * @throws InGroupMovementException when attempting to move grouped shapes
 	 */
-	public void deleteShape(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
+	public void deleteShape(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
 
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has not been defined!", n_arg));
@@ -227,7 +224,7 @@ public class ShapeManager implements Serializable, Cloneable {
 		Shape shapeToBeDeleted = shapeStorage.get(n_arg);
 		if (shapeToBeDeleted instanceof GroupShape) {
 			for (Shape aMember : ((GroupShape) shapeToBeDeleted).getGroupMembers())
-				deleteShape(aMember.getName());
+				deleteShape(Collections.singletonList(aMember.getName()));
 		}
 		shapeStorage.remove(n_arg);
 	}
@@ -242,9 +239,9 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws ShapeOutOfMapException   when attempting to move out of map
 	 * @see Shape#move(float, float)
 	 */
-	public void moveShape(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
-		float dx_arg = (float) args[1], dy_arg = (float) args[2];
+	public void moveShape(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
+		float dx_arg = (float) args.get(1), dy_arg = (float) args.get(2);
 
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(n_arg + " has not been defined!");
@@ -258,11 +255,12 @@ public class ShapeManager implements Serializable, Cloneable {
 	/**
 	 * @param args arguments from outside, will be split into correct parts
 	 * @throws ShapeOutOfMapException when attempting to move out of map
-	 * @see #moveShape(Object...)
+	 * @see #intersect(Shape, Shape)
+	 * @see #moveShape(List)
 	 */
-	public void pickMoveShape(Object... args) throws ClevisException {
-		float x_arg = (float) args[0], y_arg = (float) args[1],
-				dx_arg = (float) args[2], dy_arg = (float) args[3];
+	public void pickMoveShape(List<Object> args) throws ClevisException {
+		float x_arg = (float) args.get(0), y_arg = (float) args.get(1),
+				dx_arg = (float) args.get(2), dy_arg = (float) args.get(3);
 
 		Circle pickPoint = new Circle(x_arg, y_arg, pointRadius);
 		List<Shape> shapeList = new ArrayList<>(shapeStorage.values());
@@ -270,7 +268,7 @@ public class ShapeManager implements Serializable, Cloneable {
 		for (Shape shape : shapeList) {
 			if (intersect(shape, pickPoint)) {
 				System.out.println(shape + " is picked!");
-				moveShape(shape, dx_arg, dy_arg);
+				moveShape(Arrays.asList(shape.getName(), dx_arg, dy_arg));
 				return;
 			}
 		}
@@ -283,29 +281,22 @@ public class ShapeManager implements Serializable, Cloneable {
 	 *
 	 * @param args arguments from outside, will be split into correct parts
 	 * @return whether the two shapes have any intersections.
-	 * @throws IllegalNameException when some names are not defined
+	 * @throws IllegalNameException     when some names are not defined
+	 * @throws InGroupMovementException when attemting to move grouped shapes
 	 * @see IntersectionJudge
 	 */
-	public boolean intersect(Object... args) throws ClevisException {
-		String n1_arg = (String) args[0];
-		String n2_arg = (String) args[1];
+	public boolean intersect(List<Object> args) throws ClevisException {
+		String n1_arg = (String) args.get(0);
+		String n2_arg = (String) args.get(1);
 
 		if (!containsShape(n1_arg))
 			throw new IllegalNameException(n1_arg + " has not been defined!");
 		if (!containsShape(n2_arg))
 			throw new IllegalNameException(n2_arg + " has not been defined!");
+		if (isGroupedShape(n1_arg) || isGroupedShape(n2_arg))
+			throw new InGroupMovementException("In group shape cannot be used directly!");
 
-		Shape shapeOne = shapeStorage.get(n1_arg);
-		Shape shapeTwo = shapeStorage.get(n2_arg);
-		Class<? extends Shape> classOne = shapeOne.getClass();
-		Class<? extends Shape> classTwo = shapeTwo.getClass();
-		try {
-			Method method = IntersectionJudge.class.getDeclaredMethod("intersects", classOne, classTwo);
-			return (boolean) method.invoke(IntersectionJudge.class, shapeOne, shapeTwo);
-		} catch (ReflectiveOperationException reflectiveOperationException) {
-			System.out.println("Bugs detected >>> This line is not suppose to be here!");
-			return false;
-		}
+		return intersect(shapeStorage.get(n1_arg), shapeStorage.get(n2_arg));
 	}
 
 
@@ -313,13 +304,16 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * Prints out a rectangle and its area representing the bounding box of a shape.
 	 *
 	 * @param args arguments from outside, will be split into correct parts
-	 * @throws IllegalNameException when the name has not been defined
+	 * @throws IllegalNameException     when the name has not been defined
+	 * @throws InGroupMovementException when attemting to move grouped shapes
 	 */
-	public void boundingbox(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
+	public void boundingbox(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
 
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(n_arg + " has not been defined!");
+		if (isGroupedShape(n_arg))
+			throw new InGroupMovementException("In group shape cannot be used directly!");
 
 		Shape shape = shapeStorage.get(n_arg);
 		float x_p = shape.leftMost(), y_p = shape.upMost(),
@@ -329,6 +323,25 @@ public class ShapeManager implements Serializable, Cloneable {
 		System.out.printf("The area of the bounding box is %.2f%n", w_p * h_p);
 	}
 
+
+	/**
+	 * Lists a shape.
+	 *
+	 * @param args arguments from outside, will be split into correct parts
+	 * @throws IllegalNameException     when the name has not been defined
+	 * @throws InGroupMovementException when attemting to move grouped shapes
+	 * @see #listWithIndents(String, String)
+	 */
+	public void listOneShape(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
+
+		if (!containsShape(n_arg))
+			throw new IllegalNameException(n_arg + " has not been defined!");
+		if (isGroupedShape(n_arg))
+			throw new InGroupMovementException("In group shape cannot be used directly!");
+
+		listWithIndents(n_arg, "");
+	}
 
 	/**
 	 * Lists all existing shape.
@@ -341,7 +354,7 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @see #listWithIndents(String, String)
 	 * @see #listGroup(String, String)
 	 */
-	public void listAllShapes(Object... args) {
+	public void listAllShapes(List<Object> args) {
 		List<Shape> shapeList = new ArrayList<>(shapeStorage.values());
 		shapeList.sort(Shape::compareTo);
 
@@ -354,6 +367,18 @@ public class ShapeManager implements Serializable, Cloneable {
 		}
 	}
 
+
+	private boolean intersect(Shape shapeOne, Shape shapeTwo) {
+		Class<? extends Shape> classOne = shapeOne.getClass();
+		Class<? extends Shape> classTwo = shapeTwo.getClass();
+		try {
+			Method method = IntersectionJudge.class.getDeclaredMethod("intersects", classOne, classTwo);
+			return (boolean) method.invoke(IntersectionJudge.class, shapeOne, shapeTwo);
+		} catch (ReflectiveOperationException reflectiveOperationException) {
+			System.out.println("Bugs detected >>> This line is not suppose to be here!");
+			return false;
+		}
+	}
 
 	private boolean isGroupedShape(String n) {
 		return shapeStorage.get(n).isGrouped();

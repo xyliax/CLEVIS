@@ -1,8 +1,10 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
+import hk.edu.polyu.comp.comp2021.clevis.Manual;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,14 +16,13 @@ class CommandHandler implements Serializable {
 	private boolean active;
 	private boolean undoable;
 	private String cmd;
+	private String cmdPart;
 	private List<Object> arguments;
-	private Class<?>[] paraTypes;
-
 	/**
 	 *
 	 */
 	CommandHandler() {
-		setVar(true, false, null, null, null);
+		setVar(true, false, null, null);
 		System.out.println("CommandHandler initialized");
 	}
 
@@ -29,7 +30,7 @@ class CommandHandler implements Serializable {
 	 *
 	 */
 	public void reset() {
-		setVar(isActive(), isUndoable(), null, null, null);
+		setVar(isActive(), isUndoable(), null, null);
 	}
 
 
@@ -43,78 +44,79 @@ class CommandHandler implements Serializable {
 	 */
 	public void process(String candidate) throws InvalidCommandException {
 		Scanner scanner = new Scanner(candidate);
-		String cmdPart = scanner.next();
-		/*switch (cmdPart) {
-			case "quit" -> setVar(false, false, null, null, null);
+		List<Object> argsPart = new ArrayList<>();
+		cmdPart = scanner.next();
+		switch (cmdPart) {
+			case "quit" -> setVar(false, false, null, null);
 
 			case "rectangle" -> {
-				setVar();
-			}
-			//add missing code
-			case "line" -> {
-				setVar();
-			}
-			//add missing code
-			case "circle" -> {
-				setVar();
-			}
-			//add missing code
-			case "square" -> {
-				setVar();
-			}
-			//add missing code
-			case "group" -> {
-				setVar();
-			}
-			//add missing code
-			case "ungroup" -> {
-				setVar();
-			}
-			//add missing code
-			case "delete" -> {
-				setVar();
-			}
-			//add missing code
-			case "boundingbox" -> {
-				setVar();
-			}
-			//add missing code
-			case "move" -> {
-				setVar();
-			}
-			//add missing code
-			case "pick-and-move" -> {
-				setVar();
-			}
-			//add missing code
-			case "intersect" -> {
-				setVar();
-			}
-			//add missing code
-			case "list" -> {
-				setVar();
-			}
-			//add missing code
-			case "listall" -> {
-				setVar();
-			}
-			//add missing code
-			case "undo" -> {
-				setVar();
+				if (!scanner.hasNext())
+					throw new InvalidCommandException("Missing [-n] for 'rectangle'!", Manual.RECTANGLE);
+
+				argsPart.add(scanner.next());
+				while (scanner.hasNextFloat())
+					argsPart.add(scanner.nextFloat());
+
+				if (argsPart.size() < 5)
+					throw new InvalidCommandException("Too few arguments for 'rectangle'!", Manual.RECTANGLE);
+				if (argsPart.size() > 5 || scanner.hasNext())
+					throw new InvalidCommandException("Too many arguments for 'rectangle'!", Manual.RECTANGLE);
+
+				setVar(true, true, "createRectangle", argsPart);
 			}
 
-			case "redo" -> {
-				setVar();
-			}
+//			case "line" -> {
+//				setVar();
+//			}
+//			case "circle" -> {
+//				setVar();
+//			}
+//			case "square" -> {
+//				setVar();
+//			}
+//			case "group" -> {
+//				setVar();
+//			}
+//			case "ungroup" -> {
+//				setVar();
+//			}
+//			case "delete" -> {
+//				setVar();
+//			}
+//			case "boundingbox" -> {
+//				setVar();
+//			}
+//			case "move" -> {
+//				setVar();
+//			}
+//			case "pick-and-move" -> {
+//				setVar();
+//			}
+//			case "intersect" -> {
+//				setVar();
+//			}
+//			case "list" -> {
+//				setVar();
+//			}
+//			case "listall" -> {
+//				setVar();
+//			}
+//			case "undo" -> {
+//				setVar();
+//			}
+//
+//			case "redo" -> {
+//				setVar();
+//			}
 
-			default -> throw new InvalidCommandException("Unknown command " + cmd);
-		}*/
+			default -> throw new InvalidCommandException("Unknown command " + cmd, Manual.CLEVIS);
+		}
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(cmd);
+		stringBuilder.append(cmdPart);
 		for (Object arg : arguments)
 			stringBuilder.append(" ").append(arg);
 		return stringBuilder.toString();
@@ -175,26 +177,11 @@ class CommandHandler implements Serializable {
 		this.arguments = arguments;
 	}
 
-	/**
-	 * Getter of paraTypes.
-	 *
-	 * @return the parameter types of this command
-	 * @see #paraTypes
-	 */
-	Class<?>[] getParaTypes() {
-		return paraTypes;
-	}
-
-	private void setParaTypes(Class<?>[] paraTypes) {
-		this.paraTypes = paraTypes;
-	}
-
-	private void setVar(boolean active, boolean undo, String cmd, List<Object> args, Class<?>[] types) {
+	private void setVar(boolean active, boolean undo, String cmd, List<Object> args) {
 		setActive(active);
 		setUndoable(undo);
 		setCmd(cmd);
 		setArguments(args);
-		setParaTypes(types);
 	}
 
 }
