@@ -32,7 +32,7 @@ class Rectangle extends SimpleShape {
 		setWidth(w_arg);
 		setHeight(h_arg);
 
-		if (this.isInMap())
+		if (!this.isInMap() || w_arg <= 0 || h_arg <= 0)
 			throw new ShapeOutOfMapException("Failure! Rectangle out of map!");
 	}
 

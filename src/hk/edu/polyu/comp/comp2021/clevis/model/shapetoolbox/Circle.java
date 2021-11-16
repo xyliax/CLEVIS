@@ -26,7 +26,7 @@ class Circle extends SimpleShape {
 		super(z_arg, n_arg, x_arg, y_arg);
 		setRadius(r_arg);
 
-		if (this.isInMap())
+		if (!this.isInMap())
 			throw new ShapeOutOfMapException("Failure! Circle out of map!");
 	}
 

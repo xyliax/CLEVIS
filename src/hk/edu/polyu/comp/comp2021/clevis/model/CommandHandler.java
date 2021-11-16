@@ -217,7 +217,7 @@ class CommandHandler implements Serializable {
 				if (argsPart.size() > 1)
 					throw new InvalidCommandException("Too many arguments for 'list'!", Manual.LIST);
 
-				setVar(true, true, "disbandGroup", argsPart);
+				setVar(true, true, "listOneShape", argsPart);
 			}
 
 			case "listAll" -> setVar(true, false, "listAllShapes", null);
@@ -235,9 +235,11 @@ class CommandHandler implements Serializable {
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(cmdPart);
-		for (Object arg : arguments)
-			stringBuilder.append(" ").
-					append(arg instanceof Float ? String.format("%.2f", arg) : arg);
+		if (arguments != null) {
+			for (Object arg : arguments)
+				stringBuilder.append(" ").
+						append(arg instanceof Float ? String.format("%.2f", arg) : arg);
+		}
 		return stringBuilder.toString();
 	}
 

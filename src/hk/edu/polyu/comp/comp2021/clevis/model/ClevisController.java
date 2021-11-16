@@ -82,7 +82,12 @@ public class ClevisController implements Serializable {
 			commandHandler.process(aCommand);
 			String name = commandHandler.getCmd();
 			List<Object> arguments = commandHandler.getArguments();
-
+			System.out.printf("----Executing %s %s%n",
+					commandHandler, commandHandler.isUndoable() ? "(undoable)" : "");
+			if (commandHandler.isUndoable()) {
+				historyStack.push(shapeManager.getClone());
+				tempStack = new Stack<>();
+			}
 			if (!commandHandler.isActive())
 				return;
 			if (name.equals("redo")) {
@@ -92,21 +97,16 @@ public class ClevisController implements Serializable {
 				if (!historyStack.empty()) {
 					tempStack.push(shapeManager.getClone());
 					shapeManager = historyStack.pop();
+					System.out.println("--------Successfully undo operation");
 				}
 			} else {
 				Method method = ShapeManager.class.getDeclaredMethod(name, List.class);
-				System.out.println(">>> Executing " + commandHandler);
 				System.out.printf("--------Invoking shapeManager.%s(%s)%n", method.getName(), arguments);
 				method.invoke(shapeManager, arguments);
 			}
-
 			logCommand(commandHandler);
-			if (commandHandler.isUndoable()) {
-				historyStack.push(shapeManager.getClone());
-				tempStack = new Stack<>();
-			}
 		} catch (ReflectiveOperationException reflectiveOperationException) {
-			// FIXME: 15/11/2021 remove at deployment
+			reflectiveOperationException.printStackTrace();
 			throw (ClevisException) reflectiveOperationException.getCause();
 		} finally {
 			commandHandler.reset();

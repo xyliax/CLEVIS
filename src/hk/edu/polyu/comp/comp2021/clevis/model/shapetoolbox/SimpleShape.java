@@ -35,16 +35,17 @@ abstract class SimpleShape extends Shape {
 	 * @param n_arg name
 	 * @param x_arg x-coordinate of the defining point
 	 * @param y_arg y-coordinate of the defining point
+	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
 	 * @see Shape#Shape(int, String)
 	 * @see Rectangle#Rectangle(int, String, float, float, float, float)
 	 * @see LineSegment#LineSegment(int, String, float, float, float, float)
 	 * @see Circle#Circle(int, String, float, float, float)
 	 */
-	SimpleShape(int z_arg, String n_arg, float x_arg, float y_arg) {
+	SimpleShape(int z_arg, String n_arg, float x_arg, float y_arg) throws ShapeOutOfMapException {
 		super(z_arg, n_arg);
 		if (x_arg > CX_MAX_VALUE || x_arg < CX_MIN_VALUE
 				|| y_arg > CY_MAX_VALUE || y_arg < CY_MIN_VALUE)
-			throw new IllegalArgumentException("Failure! Defining point out of map!");
+			throw new ShapeOutOfMapException("Failure! Defining point out of map!");
 
 		setaGroup(false);
 		setX(x_arg);

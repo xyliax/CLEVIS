@@ -6,7 +6,7 @@ import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalNameException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InGroupMovementException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
 
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -19,7 +19,7 @@ import java.util.*;
  * @see Shape
  * @see ClevisController
  */
-public class ShapeManager implements Serializable, Cloneable {
+public class ShapeManager implements Serializable {
 
 	/**
 	 * The default value for point radius used in picking.
@@ -32,7 +32,7 @@ public class ShapeManager implements Serializable, Cloneable {
 	/**
 	 * The minimum bound of the X-coordinate.
 	 */
-	protected static final float CX_MIN_VALUE = Float.MIN_VALUE;
+	protected static final float CX_MIN_VALUE = -Float.MAX_VALUE;
 	/**
 	 * The maximum bound of the Y-coordinate.
 	 */
@@ -40,9 +40,9 @@ public class ShapeManager implements Serializable, Cloneable {
 	/**
 	 * The minimum bound of the Y-coordinate.
 	 */
-	protected static final float CY_MIN_VALUE = Float.MIN_VALUE;
+	protected static final float CY_MIN_VALUE = -Float.MAX_VALUE;
 	private static final float pointRadius = DEF_PD;
-	private final HashMap<String, Shape> shapeStorage;
+	private HashMap<String, Shape> shapeStorage;
 	private int Z_ORDER;
 
 
@@ -62,12 +62,20 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @return the exact copy of this shape manager
 	 */
 	public ShapeManager getClone() {
+		Object clone = null;
 		try {
-			return (ShapeManager) this.clone();
-		} catch (CloneNotSupportedException cloneNotSupportedException) {
-			System.out.println("Unexpected CloneNotSupportedException!");
-			return null;
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+			objectOutputStream.writeObject(this);
+			objectOutputStream.flush();
+			objectOutputStream.close();
+			ObjectInputStream objectInputStream = new ObjectInputStream(
+					new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+			clone = objectInputStream.readObject();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		return (ShapeManager) clone;
 	}
 
 
@@ -79,10 +87,10 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws IllegalNameException   when the name has been defined
 	 * @see LineSegment#LineSegment(int, String, float, float, float, float)
 	 */
-	public void createLineSegment(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
-		float x1_arg = (float) args[1], y1_arg = (float) args[2],
-				x2_arg = (float) args[3], y2_arg = (float) args[4];
+	public void createLineSegment(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
+		float x1_arg = (float) args.get(1), y1_arg = (float) args.get(2),
+				x2_arg = (float) args.get(3), y2_arg = (float) args.get(4);
 
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! '%s' has been defined!", n_arg));
@@ -102,10 +110,10 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * @throws IllegalNameException   when the name has been defined
 	 * @see Circle#Circle(int, String, float, float, float)
 	 */
-	public void createCircle(Object... args) throws ClevisException {
-		String n_arg = (String) args[0];
-		float x_arg = (float) args[1], y_arg = (float) args[2],
-				r_arg = (float) args[3];
+	public void createCircle(List<Object> args) throws ClevisException {
+		String n_arg = (String) args.get(0);
+		float x_arg = (float) args.get(1), y_arg = (float) args.get(2),
+				r_arg = (float) args.get(3);
 
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
@@ -280,12 +288,11 @@ public class ShapeManager implements Serializable, Cloneable {
 	 * Use reflective operations to invoke the correct methods defined in IntersectionJudge.
 	 *
 	 * @param args arguments from outside, will be split into correct parts
-	 * @return whether the two shapes have any intersections.
 	 * @throws IllegalNameException     when some names are not defined
 	 * @throws InGroupMovementException when attemting to move grouped shapes
 	 * @see IntersectionJudge
 	 */
-	public boolean hasIntersection(List<Object> args) throws ClevisException {
+	public void hasIntersection(List<Object> args) throws ClevisException {
 		String n1_arg = (String) args.get(0);
 		String n2_arg = (String) args.get(1);
 
@@ -295,8 +302,10 @@ public class ShapeManager implements Serializable, Cloneable {
 			throw new IllegalNameException(n2_arg + " has not been defined!");
 		if (isGroupedShape(n1_arg) || isGroupedShape(n2_arg))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
-
-		return intersect(shapeStorage.get(n1_arg), shapeStorage.get(n2_arg));
+		if (intersect(shapeStorage.get(n1_arg), shapeStorage.get(n2_arg)))
+			System.out.printf("TRUE (%s and %s)%n", n1_arg, n2_arg);
+		else
+			System.out.printf("FALSE (%s and %s)%n", n1_arg, n2_arg);
 	}
 
 
@@ -367,6 +376,9 @@ public class ShapeManager implements Serializable, Cloneable {
 		}
 	}
 
+	private void setShapeStorage(HashMap<String, Shape> shapeStorage) {
+		this.shapeStorage = shapeStorage;
+	}
 
 	private boolean intersect(Shape shapeOne, Shape shapeTwo) {
 		Class<? extends Shape> classOne = shapeOne.getClass();
@@ -403,10 +415,5 @@ public class ShapeManager implements Serializable, Cloneable {
 			if (aMember instanceof GroupShape)
 				listGroup(aMember.getName(), indents + "\t");
 		}
-	}
-
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		return super.clone();
 	}
 }
