@@ -4,6 +4,8 @@ import hk.edu.polyu.comp.comp2021.clevis.model.ClevisController;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ClevisException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -16,7 +18,7 @@ public class Clevis {
 	 * @param args args
 	 */
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 
 		String htmlName = "log.html";
 		String txtName = "log.txt";
@@ -45,11 +47,11 @@ public class Clevis {
 				|______________________________________________________________________________________________|
 							""");
 		// FIXME: 16/11/2021 remove
-		//FileInputStream file = new FileInputStream("input.txt");
-		InputStream source = System.in;
-		while (clevis.isRunning()) {
-			System.out.print(">>> Clevis % ");
-			scanner = new Scanner(source);
+		FileInputStream file = new FileInputStream("input.txt");
+		InputStream source = file;
+		scanner = new Scanner(source);
+		while (clevis.isRunning() && scanner.hasNextLine()) {
+			System.out.print("\n>>> Clevis % ");
 			String input = scanner.nextLine();
 			if (input.isBlank())
 				continue;
