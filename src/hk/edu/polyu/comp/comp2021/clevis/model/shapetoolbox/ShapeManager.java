@@ -369,6 +369,10 @@ public class ShapeManager implements Serializable {
 		listWithIndents(n_arg, "");
 	}
 
+	private void listWithIndents(String n, String indents) {
+		io.println(indents + shapeStorage.get(n));
+	}
+
 	private boolean intersect(Shape shapeOne, Shape shapeTwo) {
 		Class<? extends Shape> classOne = shapeOne.getClass();
 		Class<? extends Shape> classTwo = shapeTwo.getClass();
@@ -417,9 +421,5 @@ public class ShapeManager implements Serializable {
 			if (aMember instanceof GroupShape)
 				listGroup(aMember.getName(), indents + "\t");
 		}
-	}
-
-	private void listWithIndents(String n, String indents) {
-		io.println(indents + shapeStorage.get(n));
 	}
 }
