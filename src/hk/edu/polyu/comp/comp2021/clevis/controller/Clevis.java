@@ -144,6 +144,10 @@ public class Clevis {
 		this.createTime = createTime;
 	}
 
+	public ShapeManager getShapeManager() {
+		return shapeManager;
+	}
+
 	/**
 	 * The running status is determined by the command handler.
 	 *
