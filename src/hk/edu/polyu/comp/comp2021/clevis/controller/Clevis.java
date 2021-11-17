@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Stack;
 
 // TODO: 17/11/2021 format
+
 /**
  * The controller class for clevis.
  * <p>The connection between the user and Clevis model.</p>
@@ -124,16 +125,6 @@ public class Clevis {
 	}
 
 	/**
-	 * The running status is determined by the command handler.
-	 *
-	 * @return true if Clevis is running, otherwise false
-	 * @see CommandHandler#isActive()
-	 */
-	public boolean isRunning() {
-		return commandHandler.isActive();
-	}
-
-	/**
 	 * Getter of createTime.
 	 *
 	 * @return the creating time of this Clevis session
@@ -151,5 +142,15 @@ public class Clevis {
 	 */
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	/**
+	 * The running status is determined by the command handler.
+	 *
+	 * @return true if Clevis is running, otherwise false
+	 * @see CommandHandler#isActive()
+	 */
+	public boolean isRunning() {
+		return commandHandler.isActive();
 	}
 }

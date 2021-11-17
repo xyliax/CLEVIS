@@ -1,18 +1,27 @@
-rectangle r1 0 26 5 3
-square s1 5 31 15
-line l1 9 26 9 14
-line l2 1 0 17 28
-line l3 13 14 14 15
-circle c1 0.5 26 0.5
-circle c2 5 26 4
-circle c3 12.5 26 12.5
-circle c4 7.25 8 6.25
-group g1 c4 l2
-group g2 s1 l3
-boundingbox g1
+rectangle A 2.00 3.00 1.00 2.00
+rectangle B 7.00 9.00 5.00 3.00
+line C 2.00 5.00 7.00 8.00
+line D 5.00 10.00 9.00 2.00
+circle E 10.00 10.00 5.00
+circle F 3.00 5.00 2.00
+square G 7.00 11.00 3.00
+square H 15.00 6.00 4.00
+group g1 A F
+group g2 E C
+group g3 g1 D
+group g4 G B
+listAll
+ungroup g4
+listAll
+delete H
+listAll
 boundingbox g2
-pick-and-move 10.07 16 -1 -1
-intersect c1 c2
-intersect g1 s1
-ungroup g2
-intersect l3 c3
+boundingbox g3
+move G 4.00 0.00
+list G
+move g3 -3.00 -1.00
+list g3
+pick-and-move 11.00 9.00 0.00 1.00
+pick-and-move 11.00 10.00 0.00 -1.00
+listAll
+quit

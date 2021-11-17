@@ -90,49 +90,6 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 		return getGrouper() != this;
 	}
 
-
-	/**
-	 * Getter of aGroup.
-	 *
-	 * @return whether it is a group
-	 * @see #aGroup
-	 */
-	boolean isaGroup() {
-		return aGroup;
-	}
-
-	/**
-	 * Setter of aGroup.
-	 *
-	 * @param aGroup whether it is a group
-	 * @see #aGroup
-	 */
-	void setaGroup(boolean aGroup) {
-		this.aGroup = aGroup;
-	}
-
-
-	/**
-	 * Getter of zOrder.
-	 *
-	 * @return the z_order of this shape
-	 * @see #zOrder
-	 */
-	int getzOrder() {
-		return zOrder;
-	}
-
-	/**
-	 * Setter of zOrder.
-	 *
-	 * @param z_arg z_order to be set
-	 * @see #zOrder
-	 */
-	void setzOrder(int z_arg) {
-		zOrder = z_arg;
-	}
-
-
 	/**
 	 * Getter of grouper.
 	 *
@@ -153,6 +110,25 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 		grouper = grouper_arg;
 	}
 
+	/**
+	 * Getter of aGroup.
+	 *
+	 * @return whether it is a group
+	 * @see #aGroup
+	 */
+	boolean isaGroup() {
+		return aGroup;
+	}
+
+	/**
+	 * Setter of aGroup.
+	 *
+	 * @param aGroup whether it is a group
+	 * @see #aGroup
+	 */
+	void setaGroup(boolean aGroup) {
+		this.aGroup = aGroup;
+	}
 
 	/**
 	 * This method moves this shape.
@@ -210,9 +186,28 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	 */
 	abstract float rightMost();
 
-
 	@Override
 	public int compareTo(Shape another) {
 		return another.getzOrder() - this.zOrder;
+	}
+
+	/**
+	 * Getter of zOrder.
+	 *
+	 * @return the z_order of this shape
+	 * @see #zOrder
+	 */
+	int getzOrder() {
+		return zOrder;
+	}
+
+	/**
+	 * Setter of zOrder.
+	 *
+	 * @param z_arg z_order to be set
+	 * @see #zOrder
+	 */
+	void setzOrder(int z_arg) {
+		zOrder = z_arg;
 	}
 }

@@ -41,56 +41,6 @@ class Rectangle extends SimpleShape {
 	}
 
 	/**
-	 * Setter of width.
-	 *
-	 * @param w_arg the width to be set
-	 * @throws IllegalShapeException when the width is illegal
-	 * @see #width
-	 */
-	void setWidth(float w_arg) throws IllegalShapeException {
-		if (w_arg <= 0)
-			throw new IllegalShapeException("The width cannot <= 0!");
-
-		width = w_arg;
-	}
-
-
-	/**
-	 * Getter of width.
-	 *
-	 * @return the width of this rectangle
-	 * @see #width
-	 */
-	float getWidth() {
-		return width;
-	}
-
-	/**
-	 * Setter of height.
-	 *
-	 * @param h_arg the height to be set
-	 * @throws IllegalShapeException when the height is illegal
-	 * @see #height
-	 */
-	void setHeight(float h_arg) throws IllegalShapeException {
-		if (h_arg <= 0)
-			throw new IllegalShapeException("The height cannot <= 0");
-
-		height = h_arg;
-	}
-
-
-	/**
-	 * Getter of height.
-	 *
-	 * @return the height of this rectangle
-	 * @see #height
-	 */
-	float getHeight() {
-		return height;
-	}
-
-	/**
 	 * Gets all the 4 sides of this rectangle.
 	 *
 	 * @return a LineSegment array of the 4 sides
@@ -108,7 +58,6 @@ class Rectangle extends SimpleShape {
 			return null;
 		}
 	}
-
 
 	@Override
 	float upMost() {
@@ -135,5 +84,53 @@ class Rectangle extends SimpleShape {
 		return String.format(
 				"%s@Rectangle [top-left] = (%.2f, %.2f) [width] = %.2f [height] = %.2f",
 				getName(), getX(), getY(), getWidth(), getHeight());
+	}
+
+	/**
+	 * Getter of width.
+	 *
+	 * @return the width of this rectangle
+	 * @see #width
+	 */
+	float getWidth() {
+		return width;
+	}
+
+	/**
+	 * Setter of width.
+	 *
+	 * @param w_arg the width to be set
+	 * @throws IllegalShapeException when the width is illegal
+	 * @see #width
+	 */
+	void setWidth(float w_arg) throws IllegalShapeException {
+		if (w_arg <= 0)
+			throw new IllegalShapeException("The width cannot <= 0!");
+
+		width = w_arg;
+	}
+
+	/**
+	 * Getter of height.
+	 *
+	 * @return the height of this rectangle
+	 * @see #height
+	 */
+	float getHeight() {
+		return height;
+	}
+
+	/**
+	 * Setter of height.
+	 *
+	 * @param h_arg the height to be set
+	 * @throws IllegalShapeException when the height is illegal
+	 * @see #height
+	 */
+	void setHeight(float h_arg) throws IllegalShapeException {
+		if (h_arg <= 0)
+			throw new IllegalShapeException("The height cannot <= 0");
+
+		height = h_arg;
 	}
 }

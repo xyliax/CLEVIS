@@ -5,7 +5,9 @@ import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InModelException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
 import hk.edu.polyu.comp.comp2021.clevis.view.ClevisIO;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 /**
  *
@@ -19,8 +21,8 @@ public class Application {
 	 *
 	 */
 	public Application(String[] args) throws FileNotFoundException {
-		//InputStream in = new FileInputStream("input.txt");
-		setClevisIO(new ClevisIO(System.in, System.out));
+		InputStream in = new FileInputStream("input.txt");
+		setClevisIO(new ClevisIO(in, System.out));
 		setController(new Clevis(clevisIO));
 
 		clevisIO.setLogFiles(args);

@@ -124,10 +124,58 @@ public class ClevisIO implements Serializable {
 		} catch (IOException ioException) {
 			printRunningMessage("Unable to log command: " + command);
 		}
+		createhtml();
 	}
 
 	public void printRunningMessage(String message) {
 		System.out.println("--------" + message);
+	}
+
+	public void createhtml() {
+		StringBuilder sb = new StringBuilder();
+		PrintStream printStream = null;
+		try {
+			printStream = new PrintStream(htmlLogFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		String partname = htmlLogFile.replaceAll(".html", "");
+		sb.append("<html>");
+		sb.append("<head>");
+		sb.append("<title>").append(partname).append("</title>");
+		sb.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
+		sb.append("<style type=\"text/css\">");
+		sb.append(".tablename table th {background:#8FBC8F}");
+		sb.append(".tablename table tr{ background:#FAEBD7;text-align:center}");
+		sb.append("</style></head>");
+		sb.append("<div class=\"tablename\">");
+		sb.append("<table align=\"center\" width=\"500\"  height=\"100\" border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;\">");
+		sb.append("<th>operation index</th><th>operation command</th><tr>");
+		sb.append("<tbody   align=\"center\">");
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
+			Scanner scanner = new Scanner(new FileInputStream(txtLogFile));
+			int i = 1;
+			while (scanner.hasNextLine()) {
+				stringBuilder.append(addLine(i++, scanner.nextLine()));
+			}
+		} catch (Exception ignored) {
+		}
+		sb.append(stringBuilder);
+		sb.append("</tr></table>");
+		/*sb.append("<body background=\"beach.jpg\"style=\"background-repeat:no-repeat"
+				+ "background-attachment:fixed;"
+				+ " background-size:100% 100%;\">");*/
+		sb.append("</div></body></html>");
+		printStream.println(sb);
+
+	}
+
+
+	private String addLine(int x, String y) {
+		StringBuilder A = new StringBuilder();
+		A.append("<td>").append(x).append("</td><td>").append(y).append("</td></tr>");
+		return A.toString();
 	}
 
 	public void displayUserManual(String command) {

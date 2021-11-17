@@ -66,7 +66,7 @@ interface IntersectionJudge {
 				x2 = c2.getX(), y2 = c2.getY(), r2 = c2.getRadius();
 
 		float d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
-		return (r1 - r2) * (r1 - r2) <= d || d <= (r1 + r2) * (r1 + r2);
+		return (r1 - r2) * (r1 - r2) <= d && d <= (r1 + r2) * (r1 + r2);
 	}
 
 	/**

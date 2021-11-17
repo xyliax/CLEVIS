@@ -48,32 +48,6 @@ class Circle extends SimpleShape {
 			throw new ShapeOutOfMapException("Failure! Circle out of map!");
 	}
 
-
-	/**
-	 * Getter of radius.
-	 *
-	 * @return the radius of this circle
-	 * @see #radius
-	 */
-	float getRadius() {
-		return radius;
-	}
-
-	/**
-	 * Setter of radius.
-	 *
-	 * @param r_arg the radius to be set
-	 * @throws IllegalShapeException when the radius is illegal
-	 * @see #radius
-	 */
-	void setRadius(float r_arg) throws IllegalShapeException {
-		if (r_arg < 0)
-			throw new IllegalShapeException("The radius cannot <= 0!");
-
-		radius = r_arg;
-	}
-
-
 	@Override
 	float upMost() {
 		return y + radius;
@@ -98,5 +72,29 @@ class Circle extends SimpleShape {
 	public String toString() {
 		return String.format("%s@Circle [center] = (%.2f, %.2f) [radius] = %.2f",
 				getName(), getX(), getY(), getRadius());
+	}
+
+	/**
+	 * Getter of radius.
+	 *
+	 * @return the radius of this circle
+	 * @see #radius
+	 */
+	float getRadius() {
+		return radius;
+	}
+
+	/**
+	 * Setter of radius.
+	 *
+	 * @param r_arg the radius to be set
+	 * @throws IllegalShapeException when the radius is illegal
+	 * @see #radius
+	 */
+	void setRadius(float r_arg) throws IllegalShapeException {
+		if (r_arg < 0)
+			throw new IllegalShapeException("The radius cannot <= 0!");
+
+		radius = r_arg;
 	}
 }

@@ -55,49 +55,6 @@ class LineSegment extends SimpleShape {
 			throw new ShapeOutOfMapException("Failure! Line segment ends_2 out of map!");
 	}
 
-
-	/**
-	 * Getter of endX.
-	 *
-	 * @return the x-coordinate of ends_2
-	 * @see #endX
-	 */
-	float getEndX() {
-		return endX;
-	}
-
-	/**
-	 * Setter of endX.
-	 *
-	 * @param endX_arg the x-coordinate to be set to eds_2
-	 * @see #endX
-	 */
-	void setEndX(float endX_arg) {
-		endX = endX_arg;
-	}
-
-
-	/**
-	 * Getter of endY.
-	 *
-	 * @return the y-coordinate of ends_2
-	 * @see #endY
-	 */
-	float getEndY() {
-		return endY;
-	}
-
-	/**
-	 * Setter of endY.
-	 *
-	 * @param endY_arg the y-coordinate to be set to ends_2
-	 * @see #endY
-	 */
-	void setEndY(float endY_arg) {
-		endY = endY_arg;
-	}
-
-
 	@Override
 	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {
 		super.move(dx_arg, dy_arg);
@@ -130,5 +87,45 @@ class LineSegment extends SimpleShape {
 		return String.format(
 				"%s@LineSegment [ends1] = (%.2f, %.2f) [ends2] = (%.2f, %.2f)",
 				getName(), getX(), getY(), getEndX(), getEndY());
+	}
+
+	/**
+	 * Getter of endX.
+	 *
+	 * @return the x-coordinate of ends_2
+	 * @see #endX
+	 */
+	float getEndX() {
+		return endX;
+	}
+
+	/**
+	 * Setter of endX.
+	 *
+	 * @param endX_arg the x-coordinate to be set to eds_2
+	 * @see #endX
+	 */
+	void setEndX(float endX_arg) {
+		endX = endX_arg;
+	}
+
+	/**
+	 * Getter of endY.
+	 *
+	 * @return the y-coordinate of ends_2
+	 * @see #endY
+	 */
+	float getEndY() {
+		return endY;
+	}
+
+	/**
+	 * Setter of endY.
+	 *
+	 * @param endY_arg the y-coordinate to be set to ends_2
+	 * @see #endY
+	 */
+	void setEndY(float endY_arg) {
+		endY = endY_arg;
 	}
 }

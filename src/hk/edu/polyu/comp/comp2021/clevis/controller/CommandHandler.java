@@ -35,6 +35,13 @@ class CommandHandler implements Serializable {
 		setVar(true, false, null, null);
 	}
 
+	private void setVar(boolean active, boolean undo, String cmd, List<Object> args) {
+		setActive(active);
+		setUndoable(undo);
+		setCmd(cmd);
+		setArguments(args);
+	}
+
 	/**
 	 *
 	 */
@@ -42,6 +49,32 @@ class CommandHandler implements Serializable {
 		setVar(isActive(), isUndoable(), null, null);
 	}
 
+	/**
+	 * Getter of active. Determine if Clevis is running.
+	 *
+	 * @return whether it is activated
+	 * @see #active
+	 */
+	boolean isActive() {
+		return active;
+	}
+
+	private void setActive(boolean active) {
+		this.active = active;
+	}
+
+	/**
+	 * Getter of undoable.
+	 *
+	 * @return whether the command is undoable
+	 */
+	boolean isUndoable() {
+		return undoable;
+	}
+
+	private void setUndoable(boolean undoable) {
+		this.undoable = undoable;
+	}
 
 	/**
 	 * Process on a command string, and set status.
@@ -231,7 +264,6 @@ class CommandHandler implements Serializable {
 		}
 	}
 
-
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -242,33 +274,6 @@ class CommandHandler implements Serializable {
 						append(arg instanceof Float ? String.format("%.2f", arg) : arg);
 		}
 		return stringBuilder.toString();
-	}
-
-	/**
-	 * Getter of active. Determine if Clevis is running.
-	 *
-	 * @return whether it is activated
-	 * @see #active
-	 */
-	boolean isActive() {
-		return active;
-	}
-
-	private void setActive(boolean active) {
-		this.active = active;
-	}
-
-	/**
-	 * Getter of undoable.
-	 *
-	 * @return whether the command is undoable
-	 */
-	boolean isUndoable() {
-		return undoable;
-	}
-
-	private void setUndoable(boolean undoable) {
-		this.undoable = undoable;
 	}
 
 	/**
@@ -297,12 +302,5 @@ class CommandHandler implements Serializable {
 
 	private void setArguments(List<Object> arguments) {
 		this.arguments = arguments;
-	}
-
-	private void setVar(boolean active, boolean undo, String cmd, List<Object> args) {
-		setActive(active);
-		setUndoable(undo);
-		setCmd(cmd);
-		setArguments(args);
 	}
 }

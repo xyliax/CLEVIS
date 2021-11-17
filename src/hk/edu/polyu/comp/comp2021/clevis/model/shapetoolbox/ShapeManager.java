@@ -111,6 +111,10 @@ public class ShapeManager implements Serializable {
 
 	}
 
+	private boolean containsShape(String n) {
+		return shapeStorage.containsKey(n);
+	}
+
 	/**
 	 * Creates a new circle and puts it into storage.
 	 *
@@ -197,6 +201,10 @@ public class ShapeManager implements Serializable {
 		shapeStorage.put(newGroup.getName(), newGroup);
 		for (Object ni : ni_args)
 			newGroup.invite(shapeStorage.get((String) ni));
+	}
+
+	private boolean isGroupedShape(String n) {
+		return shapeStorage.get(n).isGrouped();
 	}
 
 	/**
@@ -361,41 +369,19 @@ public class ShapeManager implements Serializable {
 		listWithIndents(n_arg, "");
 	}
 
-
 	private boolean intersect(Shape shapeOne, Shape shapeTwo) {
 		Class<? extends Shape> classOne = shapeOne.getClass();
 		Class<? extends Shape> classTwo = shapeTwo.getClass();
 		if (shapeOne.isaGroup())
 			return ((GroupShape) shapeOne).getGroupMembers().stream().anyMatch(m -> intersect(m, shapeTwo));
 		if (shapeTwo.isaGroup())
-			return ((GroupShape) shapeOne).getGroupMembers().stream().anyMatch(m -> intersect(m, shapeTwo));
+			return ((GroupShape) shapeTwo).getGroupMembers().stream().anyMatch(m -> intersect(m, shapeOne));
 		try {
 			Method method = IntersectionJudge.class.getDeclaredMethod("intersects", classOne, classTwo);
 			return (boolean) method.invoke(IntersectionJudge.class, shapeOne, shapeTwo);
 		} catch (ReflectiveOperationException reflectiveOperationException) {
 			reflectiveOperationException.printStackTrace();
 			return false;
-		}
-	}
-
-	private boolean isGroupedShape(String n) {
-		return shapeStorage.get(n).isGrouped();
-	}
-
-	private boolean containsShape(String n) {
-		return shapeStorage.containsKey(n);
-	}
-
-	private void listWithIndents(String n, String indents) {
-		io.println(indents + shapeStorage.get(n));
-	}
-
-	private void listGroup(String n, String indents) {
-		GroupShape grouper = (GroupShape) shapeStorage.get(n);
-		for (Shape aMember : grouper.getGroupMembers()) {
-			listWithIndents(aMember.getName(), indents);
-			if (aMember instanceof GroupShape)
-				listGroup(aMember.getName(), indents + "\t");
 		}
 	}
 
@@ -416,11 +402,24 @@ public class ShapeManager implements Serializable {
 			io.printResult("No shape in current session!");
 		shapeList.sort(Shape::compareTo);
 
+		io.printResult(shapeList.size() + " Shapes in total!");
 		for (Shape aShape : shapeList) {
-			io.printResult(shapeList.size() + " Shapes in total!");
 			listWithIndents(aShape.getName(), "");
 			if (aShape instanceof GroupShape)
 				listGroup(aShape.getName(), "\t\t");
 		}
+	}
+
+	private void listGroup(String n, String indents) {
+		GroupShape grouper = (GroupShape) shapeStorage.get(n);
+		for (Shape aMember : grouper.getGroupMembers()) {
+			listWithIndents(aMember.getName(), indents);
+			if (aMember instanceof GroupShape)
+				listGroup(aMember.getName(), indents + "\t");
+		}
+	}
+
+	private void listWithIndents(String n, String indents) {
+		io.println(indents + shapeStorage.get(n));
 	}
 }
