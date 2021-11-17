@@ -176,18 +176,17 @@ public class ClevisIO implements Serializable {
 		StringBuilder s = new StringBuilder();
 		try {
 			PrintStream printStream = new PrintStream(htmlLogFile);
-			String partname = htmlLogFile.replaceAll(".html", "");
-			s.append("<html>").append("<head>").append("<title>").append(partname).append("</title>")
-					.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />")
-					.append("<style type=\"text/css\">")
-					.append(".tablename table th {background:#8FBC8F}")
-					.append(".tablename table tr{ background:#FAEBD7;text-align:center}")
-					.append("</style></head>")
-					.append("<div class=\"tablename\">")
-					.append("<table align=\"center\" width=\"1000\"  height=\"100\" border=\"1\"")
-					.append(" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;\">")
-					.append("<th>index</th><th>operation command</th><tr>")
-					.append("<tbody   align=\"center\">");
+			s.append("<html>");
+			s.append("<head>");
+			s.append("<title>html log file</title>");
+			s.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
+			s.append("<style type=\"text/css\">");
+			s.append(".tablename table th {background:#8FBC8F}");
+			s.append(".tablename table tr{ background:#FAEBD7;text-align:center}");
+			s.append("</style></head>");
+			s.append("<div class=\"tablename\">");
+			s.append("<table align=\"center\" width=\"500\"  height=\"100\" border=\"1\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;\">");
+			s.append("<th>operation index</th><th>operation command</th><tr>");
 			try {
 				Scanner scanner = new Scanner(new FileInputStream(txtLogFile));
 				int i = 1;
@@ -196,11 +195,8 @@ public class ClevisIO implements Serializable {
 							.append(scanner.nextLine()).append("</td></tr>");
 			} catch (Exception ignored) {
 			}
-			s.append("</tr></table>")
-					.append("<body background=\"beach.jpg\"style=\"background-repeat:no-repeat")
-					.append("background-attachment:fixed;")
-					.append(" background-size:100% 100%;\">")
-					.append("</div></body></html>");
+			s.append("</tr></table>");
+			s.append("</div></body></html>");
 			printStream.println(s);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

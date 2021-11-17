@@ -29,9 +29,11 @@ public class Application {
 	 * @see #main(String[])
 	 */
 	public Application(String[] args) {
+		//ShapeDrawer drawer = new ShapeDrawer();
+		//drawer.drawCircle();
 		InputStream inputStream = System.in;
 		try {
-			inputStream = new FileInputStream("input.txt");
+			inputStream = new FileInputStream("inputx.txt");
 		} catch (FileNotFoundException ignored) {
 		}
 		setClevisIO(new ClevisIO(inputStream, System.out));

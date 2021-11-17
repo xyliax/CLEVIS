@@ -41,7 +41,7 @@ public class Clevis {
 	/**
 	 * Constructor of Clevis.
 	 *
-	 * @param io       ClevisIO to be registered in this controller
+	 * @param io ClevisIO to be registered in this controller
 	 */
 	public Clevis(ClevisIO io) {
 		clevisIO = io;
