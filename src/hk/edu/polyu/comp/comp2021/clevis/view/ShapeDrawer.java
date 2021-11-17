@@ -5,42 +5,21 @@ import java.awt.*;
 
 public class ShapeDrawer {
 	private final JFrame jFrame;
+	private float zoomBase;
 
-	public ShapeDrawer() {
+	public ShapeDrawer(float bX, float bY, float bW, float bH) {
 		jFrame = new JFrame();
 		jFrame.setSize(1200, 800);
 		jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
 	}
 
-	public void drawCircle() {
-		float boundingboxreturn = 60000;
+	public void show() {
+		jFrame.setVisible(true);
+	}
 
-		int boundingboxH = 60000;
-		int boundingboxW = 55000;
-		int boundingboxX = 340;
-		int boundingboxY = 560;
-		int ZoomBase = boundingboxH;
-		do {
-			ZoomBase /= 10;
-		} while (ZoomBase > 800);
+	public void drawCircle(float x, float y, float r) {
 
-		if (boundingboxreturn < 50) {
-			do {
-				ZoomBase *= 10;
-			} while (ZoomBase < 12);
-		}
-		System.out.print(ZoomBase);
-		int x1 = 50;
-		int y1 = 20;
-		int x2 = 20;
-		int y2 = 10;
-
-
-		int circle_radium = 60000;
-		int a = 10000;
-		int b = 8000;
-
-		int finalZoomBase = ZoomBase;
 		JPanel jpanel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -53,7 +32,6 @@ public class ShapeDrawer {
 		};
 
 		getjFrame().add(jpanel);
-		getjFrame().setVisible(true);
 	}
 
 	/**
