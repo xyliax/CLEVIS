@@ -12,7 +12,7 @@ import java.util.Arrays;
  * @see #intersects(LineSegment, Circle)
  * @see #intersects(Circle, Circle)
  */
-interface IntersectionJudge {
+public interface IntersectionJudge {
 
 	/**
 	 * @param ls1 line segment 1
