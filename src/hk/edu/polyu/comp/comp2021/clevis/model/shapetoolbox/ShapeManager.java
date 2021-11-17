@@ -422,4 +422,8 @@ public class ShapeManager implements Serializable {
 				listGroup(aMember.getName(), indents + "\t");
 		}
 	}
+
+	public HashMap<String, Shape> getShapeStorage() {
+		return shapeStorage;
+	}
 }
