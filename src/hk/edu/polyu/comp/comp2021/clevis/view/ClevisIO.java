@@ -68,9 +68,10 @@ public class ClevisIO implements Serializable {
 				**********************************************************************
 				*	Invalid Command!
 				*-------->%s
+				*-------->%s
 				*	Try "man %s" to display the user manual
 				**********************************************************************
-				%n""", exception.getMessage(), exception.getCmd().name().toLowerCase());
+				%n""", exception, exception.getMessage(), exception.getCmd().name().toLowerCase());
 	}
 
 	public void printInModelException(InModelException inModelException) {
@@ -78,8 +79,9 @@ public class ClevisIO implements Serializable {
 				**********************************************************************
 				*	Exception caught in session!
 				*-------->%s
+				*-------->%s
 				**********************************************************************
-				%n""", inModelException.getMessage());
+				%n""", inModelException, inModelException.getMessage());
 	}
 
 	public void setLogFiles(String[] args) {

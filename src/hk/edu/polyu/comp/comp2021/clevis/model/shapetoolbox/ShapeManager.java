@@ -85,10 +85,6 @@ public class ShapeManager implements Serializable {
 		return copy;
 	}
 
-	private void setShapeStorage(HashMap<String, Shape> shapeStorage) {
-		this.shapeStorage = shapeStorage;
-	}
-
 	/**
 	 * Creates a new line segments and puts it into storage.
 	 *
@@ -425,5 +421,9 @@ public class ShapeManager implements Serializable {
 
 	public HashMap<String, Shape> getShapeStorage() {
 		return shapeStorage;
+	}
+
+	private void setShapeStorage(HashMap<String, Shape> shapeStorage) {
+		this.shapeStorage = shapeStorage;
 	}
 }
