@@ -1,6 +1,8 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalShapeException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
+
 
 /**
  * The class for line segment.
@@ -14,6 +16,21 @@ class LineSegment extends SimpleShape {
 
 
 	/**
+	 * Constructor of LineSegment, specifically designed for temporary objects.
+	 *
+	 * @param x1_arg x-coordinate of ends_1
+	 * @param y1_arg y-coordinate of ends_1
+	 * @param x2_arg x-coordinate of ends_2
+	 * @param y2_arg y-coordinate of ends_2
+	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
+	 * @throws IllegalShapeException  when the two ends coinside
+	 * @see #LineSegment(int, String, float, float, float, float)
+	 */
+	LineSegment(float x1_arg, float y1_arg, float x2_arg, float y2_arg) throws ShapeOutOfMapException, IllegalShapeException {
+		this(DEF_Z_ARG, DEF_NAME_ARG, x1_arg, y1_arg, x2_arg, y2_arg);
+	}
+
+	/**
 	 * Constructor of LineSegment.
 	 *
 	 * @param z_arg  z_order
@@ -23,29 +40,19 @@ class LineSegment extends SimpleShape {
 	 * @param x2_arg x-coordinate of ends_2
 	 * @param y2_arg y-coordinate of ends_2
 	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
+	 * @throws IllegalShapeException  when the two ends coinside
 	 * @see SimpleShape#SimpleShape(int, String, float, float)
 	 */
-	LineSegment(int z_arg, String n_arg, float x1_arg, float y1_arg, float x2_arg, float y2_arg) throws ShapeOutOfMapException {
+	LineSegment(int z_arg, String n_arg, float x1_arg, float y1_arg, float x2_arg, float y2_arg) throws ShapeOutOfMapException, IllegalShapeException {
 		super(z_arg, n_arg, x1_arg, y1_arg);
+		if (x2_arg == x1_arg && y2_arg == y1_arg)
+			throw new IllegalShapeException("The two ends cannot coinside!");
+
 		setEndX(x2_arg);
 		setEndY(y2_arg);
 
-		if (!this.isInMap())
+		if (this.outMap())
 			throw new ShapeOutOfMapException("Failure! Line segment ends_2 out of map!");
-	}
-
-	/**
-	 * Constructor of LineSegment, specifically designed for temporary objects.
-	 *
-	 * @param x1_arg x-coordinate of ends_1
-	 * @param y1_arg y-coordinate of ends_1
-	 * @param x2_arg x-coordinate of ends_2
-	 * @param y2_arg y-coordinate of ends_2
-	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
-	 * @see #LineSegment(int, String, float, float, float, float)
-	 */
-	LineSegment(float x1_arg, float y1_arg, float x2_arg, float y2_arg) throws ShapeOutOfMapException {
-		this(DEF_Z_ARG, DEF_NAME_ARG, x1_arg, y1_arg, x2_arg, y2_arg);
 	}
 
 
@@ -68,6 +75,7 @@ class LineSegment extends SimpleShape {
 	void setEndX(float endX_arg) {
 		endX = endX_arg;
 	}
+
 
 	/**
 	 * Getter of endY.
@@ -123,5 +131,4 @@ class LineSegment extends SimpleShape {
 				"%s@LineSegment [ends1] = (%.2f, %.2f) [ends2] = (%.2f, %.2f)",
 				getName(), getX(), getY(), getEndX(), getEndY());
 	}
-
 }

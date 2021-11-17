@@ -79,6 +79,7 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 		name = n_arg;
 	}
 
+
 	/**
 	 * Judges if this shape is in a group.
 	 *
@@ -88,6 +89,28 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	boolean isGrouped() {
 		return getGrouper() != this;
 	}
+
+
+	/**
+	 * Getter of aGroup.
+	 *
+	 * @return whether it is a group
+	 * @see #aGroup
+	 */
+	boolean isaGroup() {
+		return aGroup;
+	}
+
+	/**
+	 * Setter of aGroup.
+	 *
+	 * @param aGroup whether it is a group
+	 * @see #aGroup
+	 */
+	void setaGroup(boolean aGroup) {
+		this.aGroup = aGroup;
+	}
+
 
 	/**
 	 * Getter of zOrder.
@@ -109,10 +132,6 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 		zOrder = z_arg;
 	}
 
-	@Override
-	public int compareTo(Shape another) {
-		return another.getzOrder() - this.zOrder;
-	}
 
 	/**
 	 * Getter of grouper.
@@ -120,7 +139,7 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	 * @return grouper of this shape
 	 * @see #grouper
 	 */
-	Shape getGrouper() {
+	protected Shape getGrouper() {
 		return grouper;
 	}
 
@@ -134,23 +153,6 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 		grouper = grouper_arg;
 	}
 
-	/**
-	 * Getter of aGroup.
-	 *
-	 * @return whether it is a group
-	 */
-	boolean isaGroup() {
-		return aGroup;
-	}
-
-	/**
-	 * Setter of aGroup.
-	 *
-	 * @param aGroup whether it is a group
-	 */
-	void setaGroup(boolean aGroup) {
-		this.aGroup = aGroup;
-	}
 
 	/**
 	 * This method moves this shape.
@@ -207,4 +209,10 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	 * @see GroupShape#rightMost()
 	 */
 	abstract float rightMost();
+
+
+	@Override
+	public int compareTo(Shape another) {
+		return another.getzOrder() - this.zOrder;
+	}
 }

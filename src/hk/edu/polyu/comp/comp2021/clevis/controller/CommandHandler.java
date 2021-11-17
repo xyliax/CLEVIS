@@ -1,13 +1,15 @@
-package hk.edu.polyu.comp.comp2021.clevis.model;
+package hk.edu.polyu.comp.comp2021.clevis.controller;
 
-import hk.edu.polyu.comp.comp2021.clevis.Manual;
+import hk.edu.polyu.comp.comp2021.clevis.Application;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
+import hk.edu.polyu.comp.comp2021.clevis.view.Manual;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+// TODO: 17/11/2021 format
 
 /**
  * The class for processing a command from the application, i.e. Clevis.
@@ -16,8 +18,8 @@ import java.util.Scanner;
  * <p>Set its status to let ClevisModel understand the command is undoable or not.</p>
  * <p>It is not able to handle invalid exceptions, so command handlers will throw it to ClevisModel.</p>
  *
- * @see hk.edu.polyu.comp.comp2021.clevis.Clevis
- * @see ClevisController
+ * @see Application
+ * @see Clevis
  */
 class CommandHandler implements Serializable {
 	private boolean active;
@@ -31,7 +33,6 @@ class CommandHandler implements Serializable {
 	 */
 	CommandHandler() {
 		setVar(true, false, null, null);
-		System.out.println(">>> CommandHandler initialized");
 	}
 
 	/**
@@ -226,7 +227,7 @@ class CommandHandler implements Serializable {
 
 			case "redo" -> setVar(true, false, "redo", null);
 
-			default -> throw new InvalidCommandException("Unknown command " + cmd, Manual.CLEVIS);
+			default -> throw new InvalidCommandException("Unknown command " + cmdPart, Manual.CLEVIS);
 		}
 	}
 

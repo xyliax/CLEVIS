@@ -1,4 +1,7 @@
-package hk.edu.polyu.comp.comp2021.clevis;
+package hk.edu.polyu.comp.comp2021.clevis.view;
+
+
+// TODO: 17/11/2021 format
 
 /**
  *
@@ -9,6 +12,7 @@ public enum Manual {
 	 */
 	CLEVIS("""
 			........................CLEVIS-USER-MANUAL........................
+						
 			COMMAND:     rectangle n x y w h
 			Description: It is used to create a rectangle which has its width
 			             and height in a certain location.
@@ -110,12 +114,6 @@ public enum Manual {
 			            Description: It is used to terminate the execution of Clevis
 			"""),
 
-	/**
-	 *
-	 */
-	TITLE("""
-			........................CLEVIS-USER-MANUAL........................
-			"""),
 	/**
 	 *
 	 */

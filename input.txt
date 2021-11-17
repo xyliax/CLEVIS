@@ -1,0 +1,18 @@
+rectangle r1 0 26 5 3
+square s1 5 31 15
+line l1 9 26 9 14
+line l2 1 0 17 28
+line l3 13 14 14 15
+circle c1 0.5 26 0.5
+circle c2 5 26 4
+circle c3 12.5 26 12.5
+circle c4 7.25 8 6.25
+group g1 c4 l2
+group g2 s1 l3
+boundingbox g1
+boundingbox g2
+pick-and-move 10.07 16 -1 -1
+intersect c1 c2
+intersect g1 s1
+ungroup g2
+intersect l3 c3

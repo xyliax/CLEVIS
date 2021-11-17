@@ -1,13 +1,14 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.exceptions;
 
-import hk.edu.polyu.comp.comp2021.clevis.Manual;
+import hk.edu.polyu.comp.comp2021.clevis.Application;
+import hk.edu.polyu.comp.comp2021.clevis.view.Manual;
 
 
 /**
  * The exception class for invalid commands.
  *
  * @see ClevisException
- * @see hk.edu.polyu.comp.comp2021.clevis.Clevis
+ * @see Application
  */
 public class InvalidCommandException extends ClevisException {
 	private final Manual cmd;

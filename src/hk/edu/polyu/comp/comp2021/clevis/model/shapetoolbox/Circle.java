@@ -1,6 +1,8 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalShapeException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
+
 
 /**
  * The class for circle.
@@ -11,6 +13,21 @@ import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException
 class Circle extends SimpleShape {
 	private float radius;
 
+
+	/**
+	 * Constructor of Cicle, specifically designed for temporary objects.
+	 *
+	 * @param x_arg x-coordinate of the center
+	 * @param y_arg y-coordinate of the center
+	 * @param r_arg radius
+	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
+	 * @throws IllegalShapeException  when the radius is illegal
+	 * @see #Circle(int, String, float, float, float)
+	 */
+	Circle(float x_arg, float y_arg, float r_arg) throws ShapeOutOfMapException, IllegalShapeException {
+		this(DEF_Z_ARG, DEF_NAME_ARG, x_arg, y_arg, r_arg);
+	}
+
 	/**
 	 * Constructor of Circle.
 	 *
@@ -20,27 +37,15 @@ class Circle extends SimpleShape {
 	 * @param y_arg y-coordinate of the center
 	 * @param r_arg radius
 	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
+	 * @throws IllegalShapeException  when the radius is illegal
 	 * @see SimpleShape#SimpleShape(int, String, float, float)
 	 */
-	Circle(int z_arg, String n_arg, float x_arg, float y_arg, float r_arg) throws ShapeOutOfMapException {
+	Circle(int z_arg, String n_arg, float x_arg, float y_arg, float r_arg) throws ShapeOutOfMapException, IllegalShapeException {
 		super(z_arg, n_arg, x_arg, y_arg);
 		setRadius(r_arg);
 
-		if (!this.isInMap())
+		if (this.outMap())
 			throw new ShapeOutOfMapException("Failure! Circle out of map!");
-	}
-
-	/**
-	 * Constructor of Cicle, specifically designed for temporary objects.
-	 *
-	 * @param x_arg x-coordinate of the center
-	 * @param y_arg y-coordinate of the center
-	 * @param r_arg radius
-	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
-	 * @see #Circle(int, String, float, float, float)
-	 */
-	Circle(float x_arg, float y_arg, float r_arg) throws ShapeOutOfMapException {
-		this(DEF_Z_ARG, DEF_NAME_ARG, x_arg, y_arg, r_arg);
 	}
 
 
@@ -58,9 +63,13 @@ class Circle extends SimpleShape {
 	 * Setter of radius.
 	 *
 	 * @param r_arg the radius to be set
+	 * @throws IllegalShapeException when the radius is illegal
 	 * @see #radius
 	 */
-	void setRadius(float r_arg) {
+	void setRadius(float r_arg) throws IllegalShapeException {
+		if (r_arg < 0)
+			throw new IllegalShapeException("The radius cannot <= 0!");
+
 		radius = r_arg;
 	}
 

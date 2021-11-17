@@ -2,6 +2,7 @@ package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
 import java.util.Arrays;
 
+
 /**
  * Interface for intersectionJudge.
  * <p>line-line; line-circle; circle-circle;</p>
@@ -12,6 +13,15 @@ import java.util.Arrays;
  * @see #intersects(Circle, Circle)
  */
 interface IntersectionJudge {
+
+	/**
+	 * @param ls1 line segment 1
+	 * @param r1  rectangle 1
+	 * @return whether they have any intersections
+	 */
+	static boolean intersects(LineSegment ls1, Rectangle r1) {
+		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(ls1, side));
+	}
 
 	/**
 	 * Crucial method!
@@ -33,6 +43,48 @@ interface IntersectionJudge {
 				((x1_2 - x2_1) * (y2_2 - y2_1) - (y1_2 - y2_1) * (x2_2 - x2_1))) > 0)
 				&& !(((x2_1 - x1_1) * (y1_2 - y1_1) - (y2_1 - y1_1) * (x1_2 - x1_1)) *
 				((x2_2 - x1_1) * (y1_2 - y1_1) - (y2_2 - y1_1) * (x1_2 - x1_1)) > 0);
+	}
+
+	/**
+	 * @param ls1 line segment 1
+	 * @param s1  square 1
+	 * @return whether they have any intersections
+	 */
+	static boolean intersects(LineSegment ls1, Square s1) {
+		return Arrays.stream(s1.getSides()).anyMatch(side -> intersects(ls1, side));
+	}
+
+	/**
+	 * Crucial method!
+	 *
+	 * @param c1 circle 1
+	 * @param c2 circle 2
+	 * @return whether they have any intersections
+	 */
+	static boolean intersects(Circle c1, Circle c2) {
+		float x1 = c1.getX(), y1 = c1.getY(), r1 = c1.getRadius(),
+				x2 = c2.getX(), y2 = c2.getY(), r2 = c2.getRadius();
+
+		float d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+		return (r1 - r2) * (r1 - r2) <= d || d <= (r1 + r2) * (r1 + r2);
+	}
+
+	/**
+	 * @param c1 circle 1
+	 * @param r1 rectangle 1
+	 * @return whether they have any intersections
+	 */
+	static boolean intersects(Circle c1, Rectangle r1) {
+		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(c1, side));
+	}
+
+	/**
+	 * @param c1  circle 1
+	 * @param ls1 line segment 1
+	 * @return whether they have any intersections
+	 */
+	static boolean intersects(Circle c1, LineSegment ls1) {
+		return intersects(ls1, c1);
 	}
 
 	/**
@@ -62,73 +114,12 @@ interface IntersectionJudge {
 	}
 
 	/**
-	 * @param ls1 line segment 1
-	 * @param r1  rectangle 1
-	 * @return whether they have any intersections
-	 */
-	static boolean intersects(LineSegment ls1, Rectangle r1) {
-		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(ls1, side));
-	}
-
-	/**
-	 * @param ls1 line segment 1
-	 * @param s1  square 1
-	 * @return whether they have any intersections
-	 */
-	static boolean intersects(LineSegment ls1, Square s1) {
-		return Arrays.stream(s1.getSides()).anyMatch(side -> intersects(ls1, side));
-	}
-
-	/**
-	 * @param c1  circle 1
-	 * @param ls1 line segment 1
-	 * @return whether they have any intersections
-	 */
-	static boolean intersects(Circle c1, LineSegment ls1) {
-		return intersects(ls1, c1);
-	}
-
-	/**
-	 * Crucial method!
-	 *
-	 * @param c1 circle 1
-	 * @param c2 circle 2
-	 * @return whether they have any intersections
-	 */
-	static boolean intersects(Circle c1, Circle c2) {
-		float x1 = c1.getX(), y1 = c1.getY(), r1 = c1.getRadius(),
-				x2 = c2.getX(), y2 = c2.getY(), r2 = c2.getRadius();
-
-		float d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
-		return (r1 - r2) * (r1 - r2) <= d || d <= (r1 + r2) * (r1 + r2);
-	}
-
-	/**
-	 * @param c1 circle 1
-	 * @param r1 rectangle 1
-	 * @return whether they have any intersections
-	 */
-	static boolean intersects(Circle c1, Rectangle r1) {
-		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(c1, side));
-	}
-
-	/**
 	 * @param c1 circle 1
 	 * @param s1 square 1
 	 * @return whether they have any intersections
 	 */
 	static boolean intersects(Circle c1, Square s1) {
 		return Arrays.stream(s1.getSides()).anyMatch(side -> intersects(c1, side));
-	}
-
-
-	/**
-	 * @param r1  rectangle 1
-	 * @param ls1 line segment 1
-	 * @return whether they have any intersections
-	 */
-	static boolean intersects(Rectangle r1, LineSegment ls1) {
-		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(ls1, side));
 	}
 
 	/**
@@ -147,6 +138,15 @@ interface IntersectionJudge {
 	 */
 	static boolean intersects(Rectangle r1, Rectangle r2) {
 		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(r2, side));
+	}
+
+	/**
+	 * @param r1  rectangle 1
+	 * @param ls1 line segment 1
+	 * @return whether they have any intersections
+	 */
+	static boolean intersects(Rectangle r1, LineSegment ls1) {
+		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(ls1, side));
 	}
 
 	/**
@@ -194,5 +194,4 @@ interface IntersectionJudge {
 	static boolean intersects(Square s1, Square s2) {
 		return Arrays.stream(s1.getSides()).anyMatch(side -> intersects(s2, side));
 	}
-
 }

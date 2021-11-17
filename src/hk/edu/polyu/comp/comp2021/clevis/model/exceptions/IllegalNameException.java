@@ -3,10 +3,10 @@ package hk.edu.polyu.comp.comp2021.clevis.model.exceptions;
 /**
  * The exception class for illegal names.
  *
- * @see ClevisException
- * @see hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager
+ * @see InModelException
  */
-public class IllegalNameException extends ClevisException {
+public class IllegalNameException extends InModelException {
+
 	/**
 	 * @param message exception message notes
 	 */

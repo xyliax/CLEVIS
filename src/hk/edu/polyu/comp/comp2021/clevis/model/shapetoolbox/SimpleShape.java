@@ -52,15 +52,17 @@ abstract class SimpleShape extends Shape {
 		setY(y_arg);
 	}
 
+
 	/**
 	 * Judges if this simple shape is in the map.
 	 *
 	 * @return whether this simple shape is in the map
 	 */
-	protected boolean isInMap() {
-		return !(rightMost() > CX_MAX_VALUE) && !(leftMost() < CX_MIN_VALUE)
-				&& !(upMost() > CY_MAX_VALUE) && !(downMost() < CY_MIN_VALUE);
+	protected boolean outMap() {
+		return rightMost() > CX_MAX_VALUE || leftMost() < CX_MIN_VALUE
+				|| upMost() > CY_MAX_VALUE || downMost() < CY_MIN_VALUE;
 	}
+
 
 	/**
 	 * Getter of x.
@@ -81,6 +83,7 @@ abstract class SimpleShape extends Shape {
 	void setX(float x_arg) {
 		x = x_arg;
 	}
+
 
 	/**
 	 * Getter of y.

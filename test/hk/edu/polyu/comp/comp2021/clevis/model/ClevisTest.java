@@ -6,8 +6,8 @@ public class ClevisTest {
 
     @Test
     public void testClevisConstructor(){
-        ClevisController clevis = new ClevisController();
-        assert true;
+
+		assert true;
     }
 
 }

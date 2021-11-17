@@ -1,7 +1,9 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalShapeException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
+
 
 /**
  * The class for square.
@@ -21,9 +23,10 @@ class Square extends Rectangle {
 	 * @param y_arg y-coordinate of the top-left corner
 	 * @param l_arg length
 	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
+	 * @throws IllegalShapeException  when the length is illegal
 	 * @see Rectangle#Rectangle(int, String, float, float, float, float)
 	 */
-	Square(int z_arg, String n_arg, float x_arg, float y_arg, float l_arg) throws ShapeOutOfMapException {
+	Square(int z_arg, String n_arg, float x_arg, float y_arg, float l_arg) throws ShapeOutOfMapException, IllegalShapeException {
 		super(z_arg, n_arg, x_arg, y_arg, l_arg, l_arg);
 	}
 

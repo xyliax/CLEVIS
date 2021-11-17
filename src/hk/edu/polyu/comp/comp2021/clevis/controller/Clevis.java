@@ -1,19 +1,18 @@
-package hk.edu.polyu.comp.comp2021.clevis.model;
+package hk.edu.polyu.comp.comp2021.clevis.controller;
 
-import hk.edu.polyu.comp.comp2021.clevis.Clevis;
-import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ClevisException;
+import hk.edu.polyu.comp.comp2021.clevis.Application;
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InModelException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
 import hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager;
+import hk.edu.polyu.comp.comp2021.clevis.view.ClevisIO;
+import hk.edu.polyu.comp.comp2021.clevis.view.Manual;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 
+// TODO: 17/11/2021 format
 /**
  * The controller class for clevis.
  * <p>The connection between the user and Clevis model.</p>
@@ -26,42 +25,36 @@ import java.util.Stack;
  *
  * @see ShapeManager
  * @see CommandHandler
- * @see Clevis
- * @see hk.edu.polyu.comp.comp2021.clevis.Manual
+ * @see Application
+ * @see Manual
  */
-public class ClevisController implements Serializable {
+public class Clevis {
 	private final CommandHandler commandHandler;
-	private ShapeManager shapeManager;
 	private final Stack<ShapeManager> historyStack;
+	private final ClevisIO clevisIO;
+	private ShapeManager shapeManager;
 	private Stack<ShapeManager> tempStack;
-	private String htmlLogFile;
-	private String txtLogFile;
 	private Date createTime;
 
-	/**
-	 * Contructor of Clevis.
-	 * <p>This constructor set log files using default file names.</p>
-	 */
-	public ClevisController() {
-		this("log.html", "log.txt");
-	}
 
 	/**
 	 * Constructor of Clevis.
 	 *
 	 * @param htmlName html log file name
 	 * @param txtName  txt log file name
-	 * @see #setLogFiles(String, String)
+	 * @param io       ClevisIO to be registered in this controller
 	 */
-	public ClevisController(String htmlName, String txtName) {
-		shapeManager = new ShapeManager();
+	public Clevis(ClevisIO io) {
+		clevisIO = io;
+		shapeManager = new ShapeManager(clevisIO);
+		clevisIO.printSystemNotice("ShapeManager initialized");
 		commandHandler = new CommandHandler();
+		clevisIO.printSystemNotice("CommandHandler initialized");
 		historyStack = new Stack<>();
 		tempStack = new Stack<>();
 		setCreateTime(new Date());
-		System.out.println(">>> Clevis model initialized.");
-		System.out.println(this);
-		setLogFiles(htmlName, txtName);
+		clevisIO.printSystemNotice("Clevis model initialized");
+		clevisIO.println(this);
 	}
 
 	/**
@@ -73,76 +66,57 @@ public class ClevisController implements Serializable {
 	 *
 	 * @param aCommand the command String sent by the application
 	 * @throws InvalidCommandException when the command is invalid
+	 * @throws InModelException        when exceptions are thrown in clevis model
 	 * @see CommandHandler
 	 * @see ShapeManager
-	 * @see Clevis
+	 * @see Application
 	 */
-	public void request(String aCommand) throws ClevisException {
+	public void request(String aCommand) throws InModelException, InvalidCommandException {
 		try {
 			commandHandler.process(aCommand);
 			String name = commandHandler.getCmd();
 			List<Object> arguments = commandHandler.getArguments();
-			System.out.printf("----Executing %s %s%n",
-					commandHandler, commandHandler.isUndoable() ? "(undoable)" : "");
+
+			clevisIO.printRunningMessage(String.format("Executing %s %s",
+					commandHandler, commandHandler.isUndoable() ? "(undoable)" : ""));
+
 			if (commandHandler.isUndoable()) {
 				historyStack.push(shapeManager.getClone());
 				tempStack = new Stack<>();
 			}
+
 			if (!commandHandler.isActive())
 				return;
+
 			if (name.equals("redo")) {
-				if (!tempStack.empty())
+				if (!tempStack.empty()) {
+					historyStack.push(shapeManager.getClone());
 					shapeManager = tempStack.pop();
+					clevisIO.printRunningMessage("Successfully undo operation!");
+				}
+
 			} else if (name.equals("undo")) {
 				if (!historyStack.empty()) {
 					tempStack.push(shapeManager.getClone());
 					shapeManager = historyStack.pop();
-					System.out.println("--------Successfully undo operation");
+					clevisIO.printRunningMessage("Successfully undo operation!");
 				}
 			} else {
 				Method method = ShapeManager.class.getDeclaredMethod(name, List.class);
-				System.out.printf("--------Invoking shapeManager.%s(%s)%n", method.getName(), arguments);
+				clevisIO.printRunningMessage(String.format("Invoking shapeManager.%s(%s)",
+						method.getName(), arguments));
 				method.invoke(shapeManager, arguments);
 			}
-			logCommand(commandHandler);
+			clevisIO.logCommand(commandHandler.toString());
 		} catch (ReflectiveOperationException reflectiveOperationException) {
-			reflectiveOperationException.printStackTrace();
-			throw (ClevisException) reflectiveOperationException.getCause();
+			if (reflectiveOperationException.getCause() instanceof InModelException)
+				throw (InModelException) reflectiveOperationException.getCause();
+			else
+				reflectiveOperationException.printStackTrace();
 		} finally {
 			commandHandler.reset();
 		}
 	}
-
-
-	private void setLogFiles(String htmlName, String txtName) {
-		htmlLogFile = htmlName;
-		txtLogFile = txtName;
-		try {
-			new FileOutputStream(htmlLogFile);
-			new FileOutputStream(txtLogFile);
-			System.out.println(">>> Success - Finish setting up log files");
-			System.out.printf("""
-					>>> All valid operations will be logged in to the followings
-							'%s'
-							'%s'
-					%n""", htmlName, txtName);
-		} catch (FileNotFoundException ignored) {
-			System.out.println(">>> Error - Unable to set up log files");
-		}
-	}
-
-
-	private void logCommand(CommandHandler commandHandler) {
-		// TODO: 15/11/2021 Migrate html code!!!
-		String aCommand = commandHandler.toString();
-		try {
-			FileOutputStream txtStream = new FileOutputStream(txtLogFile, true);
-			txtStream.write((aCommand + '\n').getBytes());
-		} catch (IOException ioException) {
-			System.out.println("Unable to log command: " + aCommand);
-		}
-	}
-
 
 	@Override
 	public String toString() {

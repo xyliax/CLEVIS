@@ -3,10 +3,10 @@ package hk.edu.polyu.comp.comp2021.clevis.model.exceptions;
 /**
  * The exception class for some grouped shapes movements.
  *
- * @see ClevisException
- * @see hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager
+ * @see InModelException
  */
-public class InGroupMovementException extends ClevisException {
+public class InGroupMovementException extends InModelException {
+
 	/**
 	 * @param message exception message notes
 	 */

@@ -1,6 +1,9 @@
 package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalShapeException;
+import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InModelException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
+
 
 /**
  * The class for rectangle.
@@ -24,18 +27,68 @@ class Rectangle extends SimpleShape {
 	 * @param w_arg width
 	 * @param h_arg height
 	 * @throws ShapeOutOfMapException when the arguments are illegal for the map
+	 * @throws IllegalShapeException  when the width or the height is illegal
 	 * @see SimpleShape#SimpleShape(int, String, float, float)
 	 * @see Square#Square(int, String, float, float, float)
 	 */
-	Rectangle(int z_arg, String n_arg, float x_arg, float y_arg, float w_arg, float h_arg) throws ShapeOutOfMapException {
+	Rectangle(int z_arg, String n_arg, float x_arg, float y_arg, float w_arg, float h_arg) throws ShapeOutOfMapException, IllegalShapeException {
 		super(z_arg, n_arg, x_arg, y_arg);
 		setWidth(w_arg);
 		setHeight(h_arg);
 
-		if (!this.isInMap() || w_arg <= 0 || h_arg <= 0)
+		if (this.outMap() || w_arg <= 0 || h_arg <= 0)
 			throw new ShapeOutOfMapException("Failure! Rectangle out of map!");
 	}
 
+	/**
+	 * Setter of width.
+	 *
+	 * @param w_arg the width to be set
+	 * @throws IllegalShapeException when the width is illegal
+	 * @see #width
+	 */
+	void setWidth(float w_arg) throws IllegalShapeException {
+		if (w_arg <= 0)
+			throw new IllegalShapeException("The width cannot <= 0!");
+
+		width = w_arg;
+	}
+
+
+	/**
+	 * Getter of width.
+	 *
+	 * @return the width of this rectangle
+	 * @see #width
+	 */
+	float getWidth() {
+		return width;
+	}
+
+	/**
+	 * Setter of height.
+	 *
+	 * @param h_arg the height to be set
+	 * @throws IllegalShapeException when the height is illegal
+	 * @see #height
+	 */
+	void setHeight(float h_arg) throws IllegalShapeException {
+		if (h_arg <= 0)
+			throw new IllegalShapeException("The height cannot <= 0");
+
+		height = h_arg;
+	}
+
+
+	/**
+	 * Getter of height.
+	 *
+	 * @return the height of this rectangle
+	 * @see #height
+	 */
+	float getHeight() {
+		return height;
+	}
 
 	/**
 	 * Gets all the 4 sides of this rectangle.
@@ -51,50 +104,9 @@ class Rectangle extends SimpleShape {
 					l3 = new LineSegment(x2, y2, x1, y2),
 					l4 = new LineSegment(x1, y2, x1, y1);
 			return new LineSegment[]{l1, l2, l3, l4};
-		} catch (ShapeOutOfMapException shapeOutOfMapException) {
+		} catch (InModelException inModelException) {
 			return null;
 		}
-	}
-
-
-	/**
-	 * Getter of width.
-	 *
-	 * @return the width of this rectangle
-	 * @see #width
-	 */
-	float getWidth() {
-		return width;
-	}
-
-	/**
-	 * Setter of width.
-	 *
-	 * @param w_arg the width to be set
-	 * @see #width
-	 */
-	void setWidth(float w_arg) {
-		width = w_arg;
-	}
-
-	/**
-	 * Getter of height.
-	 *
-	 * @return the height of this rectangle
-	 * @see #height
-	 */
-	float getHeight() {
-		return height;
-	}
-
-	/**
-	 * Setter of height.
-	 *
-	 * @param h_arg the height to be set
-	 * @see #height
-	 */
-	void setHeight(float h_arg) {
-		height = h_arg;
 	}
 
 

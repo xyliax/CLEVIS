@@ -3,10 +3,10 @@ package hk.edu.polyu.comp.comp2021.clevis.model.exceptions;
 /**
  * The exception class for some shapes being out of map.
  *
- * @see ClevisException
- * @see hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager
+ * @see InModelException
  */
-public class ShapeOutOfMapException extends ClevisException {
+public class ShapeOutOfMapException extends InModelException {
+
 	/**
 	 * @param message exception message notes
 	 */

@@ -49,7 +49,7 @@ class GroupShape extends Shape {
 	 * @see #setGrouper(Shape)
 	 */
 	void disband() {
-		groupMembers.forEach(aMember -> aMember.setGrouper(this));
+		groupMembers.forEach(aMember -> aMember.setGrouper(aMember));
 	}
 
 
@@ -62,6 +62,7 @@ class GroupShape extends Shape {
 	List<Shape> getGroupMembers() {
 		return groupMembers;
 	}
+
 
 	private String getNameList() {
 		List<String> nameList = new ArrayList<>();
