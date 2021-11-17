@@ -13,7 +13,6 @@ import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException
  */
 class Square extends Rectangle {
 
-
 	/**
 	 * Constructor of Square.
 	 *
@@ -29,7 +28,6 @@ class Square extends Rectangle {
 	Square(int z_arg, String n_arg, float x_arg, float y_arg, float l_arg) throws ShapeOutOfMapException, IllegalShapeException {
 		super(z_arg, n_arg, x_arg, y_arg, l_arg, l_arg);
 	}
-
 
 	@Override
 	public String toString() {

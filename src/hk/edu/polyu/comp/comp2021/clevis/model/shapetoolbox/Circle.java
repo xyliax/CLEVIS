@@ -13,7 +13,6 @@ import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException
 class Circle extends SimpleShape {
 	private float radius;
 
-
 	/**
 	 * Constructor of Cicle, specifically designed for temporary objects.
 	 *
@@ -43,7 +42,6 @@ class Circle extends SimpleShape {
 	Circle(int z_arg, String n_arg, float x_arg, float y_arg, float r_arg) throws ShapeOutOfMapException, IllegalShapeException {
 		super(z_arg, n_arg, x_arg, y_arg);
 		setRadius(r_arg);
-
 		if (this.outMap())
 			throw new ShapeOutOfMapException("Failure! Circle out of map!");
 	}
@@ -94,7 +92,6 @@ class Circle extends SimpleShape {
 	void setRadius(float r_arg) throws IllegalShapeException {
 		if (r_arg < 0)
 			throw new IllegalShapeException("The radius cannot <= 0!");
-
 		radius = r_arg;
 	}
 }

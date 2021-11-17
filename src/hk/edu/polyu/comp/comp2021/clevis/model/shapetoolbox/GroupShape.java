@@ -16,7 +16,6 @@ import static hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager.
 class GroupShape extends Shape {
 	private final List<Shape> groupMembers;
 
-
 	/**
 	 * Constructor of GroupShape.
 	 *
@@ -30,7 +29,6 @@ class GroupShape extends Shape {
 		groupMembers = new ArrayList<>();
 	}
 
-
 	/**
 	 * Invites a new Shape member to this group.
 	 *
@@ -42,7 +40,6 @@ class GroupShape extends Shape {
 		groupMembers.add(member);
 	}
 
-
 	/**
 	 * Releases all members in this group.
 	 *
@@ -51,25 +48,6 @@ class GroupShape extends Shape {
 	void disband() {
 		groupMembers.forEach(aMember -> aMember.setGrouper(aMember));
 	}
-
-
-	/**
-	 * Getter of groupMembers.
-	 *
-	 * @return the List of all the members in this group
-	 * @see #groupMembers
-	 */
-	List<Shape> getGroupMembers() {
-		return groupMembers;
-	}
-
-
-	private String getNameList() {
-		List<String> nameList = new ArrayList<>();
-		groupMembers.forEach(aMember -> nameList.add(aMember.getName()));
-		return nameList.toString();
-	}
-
 
 	@Override
 	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {
@@ -117,5 +95,21 @@ class GroupShape extends Shape {
 	public String toString() {
 		return String.format("%s@Group [size] = %d [members] = %s",
 				getName(), getGroupMembers().size(), getNameList());
+	}
+
+	/**
+	 * Getter of groupMembers.
+	 *
+	 * @return the List of all the members in this group
+	 * @see #groupMembers
+	 */
+	List<Shape> getGroupMembers() {
+		return groupMembers;
+	}
+
+	private String getNameList() {
+		List<String> nameList = new ArrayList<>();
+		groupMembers.forEach(aMember -> nameList.add(aMember.getName()));
+		return nameList.toString();
 	}
 }

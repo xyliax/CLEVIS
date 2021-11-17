@@ -9,40 +9,59 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-// TODO: 17/11/2021  
+
 /**
+ * The application class for Clevis.
+ * <p>This is what the user can get access to.</p>
+ * <p>Each application object has registered controller and IO objects</p>
  *
+ * @see Clevis
+ * @see ClevisIO
  */
 public class Application {
-
 	private Clevis controller;
 	private ClevisIO clevisIO;
 
 	/**
+	 * Constructor of Application
 	 *
+	 * @param args arguments from main
+	 * @see #main(String[])
 	 */
-	public Application(String[] args) throws FileNotFoundException {
-		InputStream in = new FileInputStream("input.txt");
-		setClevisIO(new ClevisIO(in, System.out));
+	public Application(String[] args) {
+		InputStream inputStream = System.in;
+		try {
+			inputStream = new FileInputStream("input.txt");
+		} catch (FileNotFoundException ignored) {
+		}
+		setClevisIO(new ClevisIO(inputStream, System.out));
 		setController(new Clevis(clevisIO));
-
 		clevisIO.setLogFiles(args);
 	}
 
 	/**
+	 * The main method.
+	 * <p>Creates an application and start the running session.</p>
+	 *
 	 * @param args args
+	 * @see #run()
 	 */
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) {
 		Application application = new Application(args);
 		application.run();
 	}
 
+	/**
+	 * The start method for this application.
+	 * <p>Scan commands from the IO object and send to the controller for processing.<\p>
+	 *
+	 * @see #controller
+	 * @see #clevisIO
+	 * @see Clevis#request(String)
+	 */
 	public void run() {
 		Clevis clevis = this.getController();
 		ClevisIO io = this.getClevisIO();
-
-		//FileInputStream file = new FileInputStream("input.txt");
-		//io.setIn(file);
 		io.printWelcomeMessage();
 		while (clevis.isRunning()) {
 			String command = io.scanCommand();
@@ -60,20 +79,43 @@ public class Application {
 		}
 	}
 
+	/**
+	 * Getter of controller
+	 *
+	 * @return the controller object
+	 * @see #controller
+	 */
 	public Clevis getController() {
 		return controller;
 	}
 
+	/**
+	 * Setter of controller
+	 *
+	 * @param controller the controller object
+	 * @see #controller
+	 */
 	public void setController(Clevis controller) {
 		this.controller = controller;
 	}
 
+	/**
+	 * Getter of clevisIO
+	 *
+	 * @return the IO object
+	 * @see #clevisIO
+	 */
 	public ClevisIO getClevisIO() {
 		return clevisIO;
 	}
 
+	/**
+	 * Setter of clevisIO
+	 *
+	 * @param clevisIO I-O object for Clevis
+	 * @see #clevisIO
+	 */
 	public void setClevisIO(ClevisIO clevisIO) {
 		this.clevisIO = clevisIO;
 	}
 }
-

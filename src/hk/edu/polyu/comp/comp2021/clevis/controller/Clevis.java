@@ -15,7 +15,7 @@ import java.util.Stack;
 // TODO: 17/11/2021 format
 
 /**
- * The controller class for clevis.
+ * The controller class for Clevis.
  * <p>The connection between the user and Clevis model.</p>
  * <p>Translates commands into methods calls.</p>
  * <p>Manipulate the models, view patterns, and the human-computer interactions.</p>
@@ -41,8 +41,6 @@ public class Clevis {
 	/**
 	 * Constructor of Clevis.
 	 *
-	 * @param htmlName html log file name
-	 * @param txtName  txt log file name
 	 * @param io       ClevisIO to be registered in this controller
 	 */
 	public Clevis(ClevisIO io) {
@@ -77,30 +75,25 @@ public class Clevis {
 			commandHandler.process(aCommand);
 			String name = commandHandler.getCmd();
 			List<Object> arguments = commandHandler.getArguments();
-
 			clevisIO.printRunningMessage(String.format("Executing %s %s",
 					commandHandler, commandHandler.isUndoable() ? "(undoable)" : ""));
-
 			if (commandHandler.isUndoable()) {
 				historyStack.push(shapeManager.getClone());
 				tempStack = new Stack<>();
 			}
-
 			if (!commandHandler.isActive())
 				return;
-
 			if (name.equals("redo")) {
 				if (!tempStack.empty()) {
 					historyStack.push(shapeManager.getClone());
 					shapeManager = tempStack.pop();
-					clevisIO.printRunningMessage("Successfully undo operation!");
+					clevisIO.printRunningMessage("Successful redo operation!");
 				}
-
 			} else if (name.equals("undo")) {
 				if (!historyStack.empty()) {
 					tempStack.push(shapeManager.getClone());
 					shapeManager = historyStack.pop();
-					clevisIO.printRunningMessage("Successfully undo operation!");
+					clevisIO.printRunningMessage("Successful undo operation!");
 				}
 			} else {
 				Method method = ShapeManager.class.getDeclaredMethod(name, List.class);
@@ -144,6 +137,11 @@ public class Clevis {
 		this.createTime = createTime;
 	}
 
+	/**
+	 * Getter of shapeManager.
+	 *
+	 * @return the shape manager
+	 */
 	public ShapeManager getShapeManager() {
 		return shapeManager;
 	}

@@ -9,11 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// TODO: 17/11/2021 format
 
 /**
  * The class for processing a command from the application, i.e. Clevis.
- * The connection between application class and model class.
+ * <p>The connection between application class and model class.</p>
  * <p>It analyze whether a command string is valid semantically.</p>
  * <p>Set its status to let ClevisModel understand the command is undoable or not.</p>
  * <p>It is not able to handle invalid exceptions, so command handlers will throw it to ClevisModel.</p>

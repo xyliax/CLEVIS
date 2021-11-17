@@ -158,7 +158,6 @@ public interface IntersectionJudge {
 		return Arrays.stream(r1.getSides()).anyMatch(side -> intersects(s1, side));
 	}
 
-
 	/**
 	 * @param s1  square 1
 	 * @param ls1 line segment 1

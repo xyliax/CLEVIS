@@ -14,7 +14,6 @@ class LineSegment extends SimpleShape {
 	private float endX;
 	private float endY;
 
-
 	/**
 	 * Constructor of LineSegment, specifically designed for temporary objects.
 	 *
@@ -47,10 +46,8 @@ class LineSegment extends SimpleShape {
 		super(z_arg, n_arg, x1_arg, y1_arg);
 		if (x2_arg == x1_arg && y2_arg == y1_arg)
 			throw new IllegalShapeException("The two ends cannot coinside!");
-
 		setEndX(x2_arg);
 		setEndY(y2_arg);
-
 		if (this.outMap())
 			throw new ShapeOutOfMapException("Failure! Line segment ends_2 out of map!");
 	}

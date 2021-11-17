@@ -16,7 +16,6 @@ class Rectangle extends SimpleShape {
 	private float width;
 	private float height;
 
-
 	/**
 	 * Constructor of Rectangle.
 	 *
@@ -35,7 +34,6 @@ class Rectangle extends SimpleShape {
 		super(z_arg, n_arg, x_arg, y_arg);
 		setWidth(w_arg);
 		setHeight(h_arg);
-
 		if (this.outMap() || w_arg <= 0 || h_arg <= 0)
 			throw new ShapeOutOfMapException("Failure! Rectangle out of map!");
 	}
@@ -106,7 +104,6 @@ class Rectangle extends SimpleShape {
 	void setWidth(float w_arg) throws IllegalShapeException {
 		if (w_arg <= 0)
 			throw new IllegalShapeException("The width cannot <= 0!");
-
 		width = w_arg;
 	}
 
@@ -130,7 +127,6 @@ class Rectangle extends SimpleShape {
 	void setHeight(float h_arg) throws IllegalShapeException {
 		if (h_arg <= 0)
 			throw new IllegalShapeException("The height cannot <= 0");
-
 		height = h_arg;
 	}
 }

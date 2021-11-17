@@ -8,10 +8,10 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-// TODO: 17/11/2021 format
 
 /**
- * The class for shape management.
+ * <p>The model class for Clevis.</p>
+ * <p>The class for shape management.</p>
  * <p>This class is responsible for all the actions on any shape.</p>
  * <p>The only access to shape classes, and the connection between shape and users.</p>
  * <p>It sets some basic rules of shape-relevent actions</p>
@@ -53,13 +53,14 @@ public class ShapeManager implements Serializable {
 	/**
 	 * Constructor for ShapeManager.
 	 * <p>Intialize the shape storage and trashcan; set Z_order to 0.</p>
+	 *
+	 * @param clevisIO the IO object registered to this
 	 */
 	public ShapeManager(ClevisIO clevisIO) {
 		shapeStorage = new HashMap<>();
 		Z_ORDER = 0;
 		io = clevisIO;
 	}
-
 
 	/**
 	 * Returns an exact copy of this shape manager.
@@ -419,11 +420,23 @@ public class ShapeManager implements Serializable {
 		}
 	}
 
+	/**
+	 * Getter of shapeStorage
+	 *
+	 * @return the shape storage
+	 * @see #shapeStorage
+	 */
 	public HashMap<String, Shape> getShapeStorage() {
 		return shapeStorage;
 	}
 
-	private void setShapeStorage(HashMap<String, Shape> shapeStorage) {
+	/**
+	 * Setter of shapeStorage
+	 *
+	 * @param shapeStorage the shape storage
+	 * @see #shapeStorage
+	 */
+	public void setShapeStorage(HashMap<String, Shape> shapeStorage) {
 		this.shapeStorage = shapeStorage;
 	}
 }

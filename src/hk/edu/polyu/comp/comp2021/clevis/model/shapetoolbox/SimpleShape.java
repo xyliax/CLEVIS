@@ -27,7 +27,6 @@ abstract class SimpleShape extends Shape {
 	 */
 	protected float y;
 
-
 	/**
 	 * Constructor of SimpleShape.
 	 *
@@ -52,7 +51,6 @@ abstract class SimpleShape extends Shape {
 		setY(y_arg);
 	}
 
-
 	/**
 	 * Judges if this simple shape is in the map.
 	 *
@@ -62,7 +60,6 @@ abstract class SimpleShape extends Shape {
 		return rightMost() > CX_MAX_VALUE || leftMost() < CX_MIN_VALUE
 				|| upMost() > CY_MAX_VALUE || downMost() < CY_MIN_VALUE;
 	}
-
 
 	/**
 	 * Getter of x.
@@ -84,7 +81,6 @@ abstract class SimpleShape extends Shape {
 		x = x_arg;
 	}
 
-
 	/**
 	 * Getter of y.
 	 *
@@ -104,7 +100,6 @@ abstract class SimpleShape extends Shape {
 	void setY(float y_arg) {
 		y = y_arg;
 	}
-
 
 	@Override
 	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {

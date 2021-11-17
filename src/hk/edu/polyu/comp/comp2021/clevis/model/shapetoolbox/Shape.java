@@ -34,15 +34,16 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	 * z_order for this shape.
 	 */
 	protected int zOrder;
+
 	/**
 	 * The gouper of this shape, default to be itself.
 	 */
 	protected Shape grouper;
+
 	/**
 	 * whther this shape is a group shape.
 	 */
 	protected boolean aGroup;
-
 
 	/**
 	 * Constructor of Shape.
@@ -57,7 +58,6 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 		setzOrder(z_arg);
 		setGrouper(this);
 	}
-
 
 	/**
 	 * Getter of name.
@@ -78,7 +78,6 @@ abstract class Shape implements Serializable, Comparable<Shape> {
 	void setName(String n_arg) {
 		name = n_arg;
 	}
-
 
 	/**
 	 * Judges if this shape is in a group.
