@@ -1,0 +1,47 @@
+ungroup g
+rectangle r1 0 26 5 3
+square r1 1 1 1
+line r1 1 1 1 1
+circle r1 1 1 1
+square s1 5 31 15
+line l1 9 26 9 14
+line l2 1 0 17 28
+line l3 13 14 14 15
+circle c1 0.5 26 0.5
+circle c2 5 26 4
+circle c3 12.5 26 12.5
+circle c4 7.25 8 6.25
+group g1 c4 l2
+group g2 s1 l3
+boundingbox g1
+boundingbox g2
+pick-and-move 10.07 16 -1 -1
+intersect c1 c2
+ungroup g2
+intersect l3 c3
+intersect g1 s1
+square "n" 2 2 1
+rectangle r1 8 9 6 4
+rectangel r2 2 3 1 1
+line l_W1 0 0 0 0
+rectangle r_W1 3 10 5
+square s_W1 3
+circle c_W1 0
+circle //wrong
+square s_W2 5 5 -3 -9
+delete r3
+group g_W1 r3 r1 "n"
+pick-and-move
+list r1 "n"
+listAll
+undo
+boundingbox g_W1
+undo
+delete c4
+undo
+redo
+line l5 1 5 4 5
+boundingbox l5
+circle c_W5 5 5 -5
+man list
+quit
