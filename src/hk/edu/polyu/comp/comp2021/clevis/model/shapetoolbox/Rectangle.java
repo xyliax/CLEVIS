@@ -34,8 +34,6 @@ class Rectangle extends SimpleShape {
 		super(z_arg, n_arg, x_arg, y_arg);
 		setWidth(w_arg);
 		setHeight(h_arg);
-		if (this.outMap() || w_arg <= 0 || h_arg <= 0)
-			throw new ShapeOutOfMapException("Failure! Rectangle out of map!");
 	}
 
 	/**
@@ -52,7 +50,7 @@ class Rectangle extends SimpleShape {
 					l3 = new LineSegment(x2, y2, x1, y2),
 					l4 = new LineSegment(x1, y2, x1, y1);
 			return new LineSegment[]{l1, l2, l3, l4};
-		} catch (InModelException inModelException) {
+		} catch (InModelException ignored) {
 			return null;
 		}
 	}

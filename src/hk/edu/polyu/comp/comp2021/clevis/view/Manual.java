@@ -94,11 +94,11 @@ public enum Manual {
 	RECTANGLE("""
 					COMMAND:     rectangle -n -x -y -w -h
 					Description: Create a rectangle
-					ARGS:        [n]: -String- name of the rectangle
-								 [x]: -float-  the abscissa of the top left corner
-								 [y]: -float-  the ordinate of the top left corner
-								 [w]: -float-  the width of the rectangle
-								 [h]: -float-  the height of the rectangle
+					ARGS:		[n]: -String- name of the rectangle
+					 			[x]: -float-  the abscissa of the top left corner
+								[y]: -float-  the ordinate of the top left corner
+								[w]: -float-  the width of the rectangle
+								[h]: -float-  the height of the rectangle
 			"""
 	),
 

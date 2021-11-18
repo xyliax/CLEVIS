@@ -29,8 +29,6 @@ public class Application {
 	 * @see #main(String[])
 	 */
 	public Application(String[] args) {
-		//ShapeDrawer drawer = new ShapeDrawer();
-		//drawer.drawCircle();
 		InputStream inputStream = System.in;
 		try {
 			inputStream = new FileInputStream("inputx.txt");
@@ -69,14 +67,14 @@ public class Application {
 			String command = io.scanCommand();
 			if (command.matches("man .+")) {
 				io.displayUserManual(command);
-				continue;
-			}
-			try {
-				clevis.request(command);
-			} catch (InvalidCommandException invalidCommandException) {
-				io.printInvalidCommandException(invalidCommandException);
-			} catch (InModelException inModelException) {
-				io.printInModelException(inModelException);
+			} else {
+				try {
+					clevis.request(command);
+				} catch (InvalidCommandException invalidCommandException) {
+					io.printInvalidCommandException(invalidCommandException);
+				} catch (InModelException inModelException) {
+					io.printInModelException(inModelException);
+				}
 			}
 		}
 	}

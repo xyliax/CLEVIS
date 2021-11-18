@@ -76,7 +76,7 @@ public class Clevis {
 			String name = commandHandler.getCmd();
 			List<Object> arguments = commandHandler.getArguments();
 			clevisIO.printRunningMessage(String.format("Executing %s %s",
-					commandHandler, commandHandler.isUndoable() ? "(undoable)" : ""));
+					commandHandler, commandHandler.isUndoable() ? "(undo-able)" : ""));
 			if (commandHandler.isUndoable()) {
 				historyStack.push(shapeManager.getClone());
 				tempStack = new Stack<>();

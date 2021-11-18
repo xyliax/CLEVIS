@@ -78,12 +78,21 @@ public class ShapeManager implements Serializable {
 			ObjectInputStream objectInputStream = new ObjectInputStream(
 					new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
 			clone = objectInputStream.readObject();
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+		} catch (IOException | ClassNotFoundException ignored) {
 		}
 		ShapeManager copy = new ShapeManager(this.io);
 		copy.setShapeStorage((HashMap) clone);
 		return copy;
+	}
+
+	/**
+	 * Setter of shapeStorage
+	 *
+	 * @param shapeStorage the shape storage
+	 * @see #shapeStorage
+	 */
+	public void setShapeStorage(HashMap<String, Shape> shapeStorage) {
+		this.shapeStorage = shapeStorage;
 	}
 
 	/**
@@ -98,14 +107,11 @@ public class ShapeManager implements Serializable {
 		String n_arg = (String) args.get(0);
 		float x1_arg = (float) args.get(1), y1_arg = (float) args.get(2),
 				x2_arg = (float) args.get(3), y2_arg = (float) args.get(4);
-
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! '%s' has been defined!", n_arg));
-
 		LineSegment newLineSegment = new LineSegment(Z_ORDER, n_arg, x1_arg, y1_arg, x2_arg, y2_arg);
 		shapeStorage.put(newLineSegment.getName(), newLineSegment);
 		Z_ORDER++;
-
 	}
 
 	private boolean containsShape(String n) {
@@ -124,10 +130,8 @@ public class ShapeManager implements Serializable {
 		String n_arg = (String) args.get(0);
 		float x_arg = (float) args.get(1), y_arg = (float) args.get(2),
 				r_arg = (float) args.get(3);
-
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
-
 		Circle newCircle = new Circle(Z_ORDER, n_arg, x_arg, y_arg, r_arg);
 		shapeStorage.put(newCircle.getName(), newCircle);
 		Z_ORDER++;
@@ -145,10 +149,8 @@ public class ShapeManager implements Serializable {
 		String n_arg = (String) args.get(0);
 		float x_arg = (float) args.get(1), y_arg = (float) args.get(2),
 				w_arg = (float) args.get(3), h_arg = (float) args.get(4);
-
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
-
 		Rectangle newRectangle = new Rectangle(Z_ORDER, n_arg, x_arg, y_arg, w_arg, h_arg);
 		shapeStorage.put(newRectangle.getName(), newRectangle);
 		Z_ORDER++;
@@ -166,10 +168,8 @@ public class ShapeManager implements Serializable {
 		String n_arg = (String) args.get(0);
 		float x_arg = (float) args.get(1), y_arg = (float) args.get(2),
 				l_arg = (float) args.get(3);
-
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
-
 		Square newSquare = new Square(Z_ORDER++, n_arg, x_arg, y_arg, l_arg);
 		shapeStorage.put(newSquare.getName(), newSquare);
 		Z_ORDER++;
@@ -185,15 +185,12 @@ public class ShapeManager implements Serializable {
 	public void createGroup(List<Object> args) throws InModelException {
 		String n_arg = (String) args.get(0);
 		Object[] ni_args = Arrays.copyOfRange(args.toArray(), 1, args.size());
-
 		if (containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has been defined!", n_arg));
 		if (Arrays.stream(ni_args).anyMatch(ni -> !containsShape((String) ni)))
 			throw new IllegalNameException(n_arg + " member list has undefined name!");
 		if (Arrays.stream(ni_args).anyMatch(ni -> isGroupedShape((String) ni)))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
-
-
 		GroupShape newGroup = new GroupShape(Z_ORDER++, n_arg);
 		shapeStorage.put(newGroup.getName(), newGroup);
 		for (Object ni : ni_args)
@@ -214,14 +211,12 @@ public class ShapeManager implements Serializable {
 	 */
 	public void disbandGroup(List<Object> args) throws InModelException {
 		String n_arg = (String) args.get(0);
-
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(n_arg + " has not been defined!");
 		if (!(shapeStorage.get(n_arg) instanceof GroupShape grouper))
 			throw new IllegalNameException(n_arg + " is not a GroupShape!");
 		if (isGroupedShape(n_arg))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
-
 		grouper.disband();
 		shapeStorage.remove(n_arg);
 	}
@@ -235,12 +230,10 @@ public class ShapeManager implements Serializable {
 	 */
 	public void deleteShape(List<Object> args) throws InModelException {
 		String n_arg = (String) args.get(0);
-
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(String.format("Duplicate name! %s has not been defined!", n_arg));
 		if (isGroupedShape(n_arg))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
-
 		Shape shapeToBeDeleted = shapeStorage.get(n_arg);
 		if (shapeToBeDeleted instanceof GroupShape) {
 			for (Shape aMember : ((GroupShape) shapeToBeDeleted).getGroupMembers())
@@ -258,7 +251,6 @@ public class ShapeManager implements Serializable {
 	public void pickMoveShape(List<Object> args) throws InModelException {
 		float x_arg = (float) args.get(0), y_arg = (float) args.get(1),
 				dx_arg = (float) args.get(2), dy_arg = (float) args.get(3);
-
 		Circle pickPoint = new Circle(x_arg, y_arg, pointRadius);
 		List<Shape> shapeList = new ArrayList<>(shapeStorage.values());
 		shapeList.sort(Shape::compareTo);
@@ -284,12 +276,10 @@ public class ShapeManager implements Serializable {
 	public void moveShape(List<Object> args) throws InModelException {
 		String n_arg = (String) args.get(0);
 		float dx_arg = (float) args.get(1), dy_arg = (float) args.get(2);
-
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(n_arg + " has not been defined!");
 		if (isGroupedShape(n_arg))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
-
 		Shape shapeToBeMoved = shapeStorage.get(n_arg);
 		shapeToBeMoved.move(dx_arg, dy_arg);
 	}
@@ -306,7 +296,6 @@ public class ShapeManager implements Serializable {
 	public void hasIntersection(List<Object> args) throws InModelException {
 		String n1_arg = (String) args.get(0);
 		String n2_arg = (String) args.get(1);
-
 		if (!containsShape(n1_arg))
 			throw new IllegalNameException(n1_arg + " has not been defined!");
 		if (!containsShape(n2_arg))
@@ -328,16 +317,13 @@ public class ShapeManager implements Serializable {
 	 */
 	public void boundingbox(List<Object> args) throws InModelException {
 		String n_arg = (String) args.get(0);
-
 		if (!containsShape(n_arg))
 			throw new IllegalNameException(n_arg + " has not been defined!");
 		if (isGroupedShape(n_arg))
 			throw new InGroupMovementException("In group shape cannot be used directly!");
-
 		Shape shape = shapeStorage.get(n_arg);
 		float x_p = shape.leftMost(), y_p = shape.upMost(),
 				w_p = shape.rightMost() - x_p, h_p = y_p - shape.downMost();
-
 		try {
 			Rectangle box = new Rectangle(-1, "Bounding box for " + n_arg, x_p, y_p, w_p, h_p);
 			io.printResult(box.toString());
@@ -380,8 +366,7 @@ public class ShapeManager implements Serializable {
 		try {
 			Method method = IntersectionJudge.class.getDeclaredMethod("intersects", classOne, classTwo);
 			return (boolean) method.invoke(IntersectionJudge.class, shapeOne, shapeTwo);
-		} catch (ReflectiveOperationException reflectiveOperationException) {
-			reflectiveOperationException.printStackTrace();
+		} catch (ReflectiveOperationException ignored) {
 			return false;
 		}
 	}
@@ -402,7 +387,6 @@ public class ShapeManager implements Serializable {
 		if (shapeList.isEmpty())
 			io.printResult("No shape in current session!");
 		shapeList.sort(Shape::compareTo);
-
 		io.printResult(shapeList.size() + " Shapes in total!");
 		for (Shape aShape : shapeList) {
 			listWithIndents(aShape.getName(), "");
@@ -418,25 +402,5 @@ public class ShapeManager implements Serializable {
 			if (aMember instanceof GroupShape)
 				listGroup(aMember.getName(), indents + "\t");
 		}
-	}
-
-	/**
-	 * Getter of shapeStorage
-	 *
-	 * @return the shape storage
-	 * @see #shapeStorage
-	 */
-	public HashMap<String, Shape> getShapeStorage() {
-		return shapeStorage;
-	}
-
-	/**
-	 * Setter of shapeStorage
-	 *
-	 * @param shapeStorage the shape storage
-	 * @see #shapeStorage
-	 */
-	public void setShapeStorage(HashMap<String, Shape> shapeStorage) {
-		this.shapeStorage = shapeStorage;
 	}
 }

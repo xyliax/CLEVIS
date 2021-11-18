@@ -51,9 +51,6 @@ class GroupShape extends Shape {
 
 	@Override
 	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {
-		if (rightMost() + dx_arg > CX_MAX_VALUE || leftMost() + dx_arg < CX_MIN_VALUE
-				|| upMost() + dy_arg > CY_MAX_VALUE || downMost() + dy_arg < CY_MIN_VALUE)
-			throw new ShapeOutOfMapException("Failure! Some shape in this group would be out of map!");
 
 		for (Shape aMember : groupMembers)
 			aMember.move(dx_arg, dy_arg);

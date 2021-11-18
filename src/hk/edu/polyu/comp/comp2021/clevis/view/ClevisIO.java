@@ -16,7 +16,7 @@ import java.util.Scanner;
  * @see hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager
  */
 public class ClevisIO implements Serializable {
-	private final Scanner scanner;
+	private Scanner scanner;
 	private String htmlLogFile;
 	private String txtLogFile;
 
@@ -30,6 +30,15 @@ public class ClevisIO implements Serializable {
 		System.setIn(inputStream);
 		System.setOut(printStream);
 		scanner = new Scanner(System.in);
+	}
+
+	/**
+	 * Redirects input stream.
+	 *
+	 * @param inputStream an input stream
+	 */
+	public void setIn(InputStream inputStream) {
+		scanner = new Scanner(inputStream);
 	}
 
 	/**
@@ -60,8 +69,8 @@ public class ClevisIO implements Serializable {
 	 */
 	public void printWelcomeMessage() {
 		System.out.println("""
-							|---------------------------|------------------------------------------------------|
-							| C L E V I S session starts| Signature: Group 9 COMP2021 11/2021 Group project    |
+				|---------------------------|------------------------------------------------------|
+				| C L E V I S session starts| Signature: Group 9 COMP2021 11/2021 Group project    |
 				|----------------------------------------------------------------------------------------------|
 				| **     *     **  ********   **          *********   **********      *       *      ********  |
 				|  **   * *   **   **         **          **          **      **     ***     ***     **        |

@@ -48,15 +48,6 @@ class LineSegment extends SimpleShape {
 			throw new IllegalShapeException("The two ends cannot coinside!");
 		setEndX(x2_arg);
 		setEndY(y2_arg);
-		if (this.outMap())
-			throw new ShapeOutOfMapException("Failure! Line segment ends_2 out of map!");
-	}
-
-	@Override
-	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {
-		super.move(dx_arg, dy_arg);
-		this.endX += dx_arg;
-		this.endY += dy_arg;
 	}
 
 	@Override
@@ -77,6 +68,13 @@ class LineSegment extends SimpleShape {
 	@Override
 	float rightMost() {
 		return Math.max(x, endX);
+	}
+
+	@Override
+	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {
+		super.move(dx_arg, dy_arg);
+		this.endX += dx_arg;
+		this.endY += dy_arg;
 	}
 
 	@Override
