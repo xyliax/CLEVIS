@@ -3,6 +3,9 @@ package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalShapeException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
 
+import javax.swing.*;
+import java.awt.*;
+
 
 /**
  * The class for circle.
@@ -62,6 +65,21 @@ class Circle extends SimpleShape {
 	@Override
 	float rightMost() {
 		return x + radius;
+	}
+
+	@Override
+	JPanel draw(float bX, float bY, GraphDrawer drawer) {
+		float zoomBase = drawer.getZoomBase();
+		System.out.println(zoomBase);
+		return new JPanel() {
+			@Override
+			public void paintComponent(Graphics graphics) {
+				graphics.drawOval((int) ((x - bX - radius) / zoomBase),
+						(int) ((y - bY + radius) / zoomBase),
+						(int) ((2 * radius) / zoomBase),
+						(int) ((2 * radius) / zoomBase));
+			}
+		};
 	}
 
 	@Override

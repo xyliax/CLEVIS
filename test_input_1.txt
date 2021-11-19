@@ -93,5 +93,5 @@ ungroup g5
 group g6 G g3
 ungroup g6
 boundingbox g1
-
+show
 quit

@@ -16,6 +16,6 @@ public class IllegalNameException extends InModelException {
 
 	@Override
 	public String toString() {
-		return String.format("DuplicateNameException{%s}", getMessage());
+		return String.format("IllegalNameException{%s}", getMessage());
 	}
 }

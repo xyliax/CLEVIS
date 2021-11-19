@@ -4,6 +4,9 @@ import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalShapeException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InModelException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
 
+import javax.swing.*;
+import java.awt.*;
+
 
 /**
  * The class for rectangle.
@@ -73,6 +76,20 @@ class Rectangle extends SimpleShape {
 	@Override
 	float rightMost() {
 		return x + width;
+	}
+
+	@Override
+	JPanel draw(float bX, float bY, GraphDrawer drawer) {
+		float zoomBase = drawer.getZoomBase();
+		return new JPanel() {
+			@Override
+			public void paintComponent(Graphics graphics) {
+				graphics.drawRect((int) ((x - bX) / zoomBase + 10),
+						(int) ((y - bY) / zoomBase + 10),
+						(int) (width / zoomBase),
+						(int) (height / zoomBase));
+			}
+		};
 	}
 
 	@Override

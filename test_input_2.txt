@@ -232,4 +232,5 @@ line t2 -1 0 1 0
 intersect t1 t2
 group t3 t2
 intersect t1 t3
+show
 quit

@@ -2,6 +2,8 @@ package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
 
+import javax.swing.*;
+
 import static hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager.*;
 
 
@@ -95,4 +97,14 @@ abstract class SimpleShape extends Shape {
 		setX(x + dx_arg);
 		setY(y + dy_arg);
 	}
+
+	/**
+	 * This method return a jPanel object according to its type.
+	 *
+	 * @param bX     bounding x
+	 * @param bY     bounding y
+	 * @param drawer the drawer
+	 * @return a jPanel to be added
+	 */
+	abstract JPanel draw(float bX, float bY, GraphDrawer drawer);
 }

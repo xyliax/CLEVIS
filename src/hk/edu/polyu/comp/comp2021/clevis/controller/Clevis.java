@@ -3,6 +3,7 @@ package hk.edu.polyu.comp.comp2021.clevis.controller;
 import hk.edu.polyu.comp.comp2021.clevis.Application;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InModelException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.InvalidCommandException;
+import hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.GraphDrawer;
 import hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox.ShapeManager;
 import hk.edu.polyu.comp.comp2021.clevis.view.ClevisIO;
 import hk.edu.polyu.comp.comp2021.clevis.view.Manual;
@@ -36,7 +37,7 @@ public class Clevis {
 	private ShapeManager shapeManager;
 	private Stack<ShapeManager> tempStack;
 	private Date createTime;
-
+	private GraphDrawer graphDrawer;
 
 	/**
 	 * Constructor of Clevis.
@@ -83,23 +84,34 @@ public class Clevis {
 			}
 			if (!commandHandler.isActive())
 				return;
-			if (name.equals("redo")) {
-				if (!tempStack.empty()) {
-					historyStack.push(shapeManager.getClone());
-					shapeManager = tempStack.pop();
-					clevisIO.printRunningMessage("Successful redo operation!");
-				}
-			} else if (name.equals("undo")) {
-				if (!historyStack.empty()) {
-					tempStack.push(shapeManager.getClone());
-					shapeManager = historyStack.pop();
-					clevisIO.printRunningMessage("Successful undo operation!");
-				}
-			} else {
-				Method method = ShapeManager.class.getDeclaredMethod(name, List.class);
-				clevisIO.printRunningMessage(String.format("Invoking shapeManager.%s(%s)",
-						method.getName(), arguments));
-				method.invoke(shapeManager, arguments);
+			switch (name) {
+				case "show":
+					graphDrawer = new GraphDrawer();
+					shapeManager.drawAll(graphDrawer);
+					graphDrawer.show();
+					break;
+				case "redo":
+					if (!tempStack.empty()) {
+						historyStack.push(shapeManager.getClone());
+						shapeManager = tempStack.pop();
+						clevisIO.printRunningMessage("Successful redo operation!");
+					}
+					break;
+				case "undo":
+					if (!historyStack.empty()) {
+						tempStack.push(shapeManager.getClone());
+						shapeManager = historyStack.pop();
+						clevisIO.printRunningMessage("Successful undo operation!");
+					}
+					break;
+				default:
+					if (graphDrawer != null)
+						graphDrawer.close();
+					Method method = ShapeManager.class.getDeclaredMethod(name, List.class);
+					clevisIO.printRunningMessage(String.format("Invoking shapeManager.%s(%s)",
+							method.getName(), arguments));
+					method.invoke(shapeManager, arguments);
+					break;
 			}
 			clevisIO.logCommand(commandHandler.toString());
 		} catch (ReflectiveOperationException reflectiveOperationException) {

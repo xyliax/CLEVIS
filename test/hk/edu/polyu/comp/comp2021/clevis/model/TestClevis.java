@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 /**
  *
@@ -33,7 +32,8 @@ public class TestClevis {
 			app.getClevisIO().setIn(new FileInputStream("test_input_1.txt"));
 			app.run();
 			assert true;
-		} catch (FileNotFoundException e) {
+		} catch (Exception anyException) {
+			System.out.println("No exceptions should be thrown!");
 			assert false;
 		}
 	}
@@ -47,7 +47,8 @@ public class TestClevis {
 			app.getClevisIO().setIn(new FileInputStream("test_input_2.txt"));
 			app.run();
 			assert true;
-		} catch (FileNotFoundException e) {
+		} catch (Exception anyException) {
+			System.out.println("No exceptions should be thrown!");
 			assert false;
 		}
 	}
@@ -61,7 +62,8 @@ public class TestClevis {
 			app.getClevisIO().setIn(new FileInputStream("test_input_3.txt"));
 			app.run();
 			assert true;
-		} catch (FileNotFoundException e) {
+		} catch (Exception anyException) {
+			System.out.println("No exceptions should be thrown!");
 			assert false;
 		}
 	}

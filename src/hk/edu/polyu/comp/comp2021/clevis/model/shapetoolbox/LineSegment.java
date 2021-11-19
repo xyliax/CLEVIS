@@ -3,6 +3,9 @@ package hk.edu.polyu.comp.comp2021.clevis.model.shapetoolbox;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.IllegalShapeException;
 import hk.edu.polyu.comp.comp2021.clevis.model.exceptions.ShapeOutOfMapException;
 
+import javax.swing.*;
+import java.awt.*;
+
 
 /**
  * The class for line segment.
@@ -51,6 +54,13 @@ class LineSegment extends SimpleShape {
 	}
 
 	@Override
+	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {
+		super.move(dx_arg, dy_arg);
+		this.endX += dx_arg;
+		this.endY += dy_arg;
+	}
+
+	@Override
 	float upMost() {
 		return Math.max(y, endY);
 	}
@@ -71,10 +81,17 @@ class LineSegment extends SimpleShape {
 	}
 
 	@Override
-	void move(float dx_arg, float dy_arg) throws ShapeOutOfMapException {
-		super.move(dx_arg, dy_arg);
-		this.endX += dx_arg;
-		this.endY += dy_arg;
+	JPanel draw(float bX, float bY, GraphDrawer drawer) {
+		float zoomBase = drawer.getZoomBase();
+		return new JPanel() {
+			@Override
+			public void paintComponent(Graphics graphics) {
+				graphics.drawLine((int) ((x - bX) / zoomBase),
+						(int) ((y - bY) / zoomBase),
+						(int) ((endX - bX) / zoomBase),
+						(int) ((endY - bY) / zoomBase));
+			}
+		};
 	}
 
 	@Override

@@ -201,11 +201,11 @@ public class ClevisIO implements Serializable {
 				int i = 1;
 				while (scanner.hasNextLine())
 					s.append("<td>").append(i++).append("</td><td>")
-							.append(scanner.nextLine()).append("</td></tr>");
+							.append(scanner.nextLine()).append("</td>");
 			} catch (Exception ignored) {
 			}
-			s.append("</tr></table>");
-			s.append("</div></body></html>");
+			s.append("</table>");
+			s.append("</div></html>");
 			printStream.println(s);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

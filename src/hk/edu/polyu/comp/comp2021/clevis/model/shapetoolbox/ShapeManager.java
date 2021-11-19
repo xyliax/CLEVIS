@@ -356,6 +356,32 @@ public class ShapeManager implements Serializable {
 		io.println(indents + shapeStorage.get(n));
 	}
 
+	/**
+	 * Draws all shapes.
+	 *
+	 * @param graphDrawer a drawer given by the Clevis controller
+	 */
+	public void drawAll(GraphDrawer graphDrawer) {
+		if (shapeStorage.size() == 0) {
+			io.printResult("Nothing to show!");
+			return;
+		}
+		float left = Float.MAX_VALUE, right = -Float.MAX_VALUE,
+				up = Float.MAX_VALUE, down = -Float.MAX_VALUE;
+		for (Shape s : shapeStorage.values()) {
+			left = Math.min(left, s.leftMost());
+			right = Math.max(right, s.rightMost());
+			up = Math.min(up, s.upMost());
+			down = Math.max(down, s.downMost());
+		}
+		graphDrawer.setZoomBase(right - left, up - down);
+		for (Shape shape : shapeStorage.values()) {
+			if (!shape.isaGroup())
+				graphDrawer.draw(((SimpleShape) shape).
+						draw(left, up, graphDrawer));
+		}
+	}
+
 	private boolean intersect(Shape shapeOne, Shape shapeTwo) {
 		Class<? extends Shape> classOne = shapeOne.getClass();
 		Class<? extends Shape> classTwo = shapeTwo.getClass();

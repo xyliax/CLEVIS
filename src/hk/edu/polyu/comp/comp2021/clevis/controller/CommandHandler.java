@@ -226,7 +226,7 @@ class CommandHandler implements Serializable {
 				if (argsPart.size() > 4 || scanner.hasNext())
 					throw new InvalidCommandException("Too many arguments for 'pick-and-move'!", Manual.PICK_AND_MOVE);
 
-				setVar(true, false, "pickMoveShape", argsPart);
+				setVar(true, true, "pickMoveShape", argsPart);
 			}
 
 			case "intersect" -> {
@@ -250,7 +250,7 @@ class CommandHandler implements Serializable {
 				if (argsPart.size() > 1)
 					throw new InvalidCommandException("Too many arguments for 'list'!", Manual.LIST);
 
-				setVar(true, true, "listOneShape", argsPart);
+				setVar(true, false, "listOneShape", argsPart);
 			}
 
 			case "listAll" -> setVar(true, false, "listAllShapes", null);
@@ -258,6 +258,8 @@ class CommandHandler implements Serializable {
 			case "undo" -> setVar(true, false, "undo", null);
 
 			case "redo" -> setVar(true, false, "redo", null);
+
+			case "show" -> setVar(true, false, "show", null);
 
 			default -> throw new InvalidCommandException("Unknown command " + cmdPart, Manual.CLEVIS);
 		}
