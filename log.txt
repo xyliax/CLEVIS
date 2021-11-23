@@ -1,0 +1,26 @@
+rectangle r1 0.00 26.00 5.00 3.00
+square s1 5.00 31.00 15.00
+line l1 9.00 26.00 9.00 14.00
+line l2 1.00 0.00 17.00 28.00
+line l3 13.00 14.00 14.00 15.00
+circle c1 0.50 26.00 0.50
+circle c2 5.00 26.00 4.00
+circle c3 12.50 26.00 12.50
+circle c4 7.25 8.00 6.25
+group g1 c4 l2
+group g2 s1 l3
+boundingbox g1
+boundingbox g2
+pick-and-move 10.07 16.00 -1.00 -1.00
+intersect c1 c2
+ungroup g2
+intersect l3 c3
+intersect g1 s1
+square "n" 2.00 2.00 1.00
+listAll
+undo
+undo
+undo
+redo
+line l5 1.00 5.00 4.00 5.00
+boundingbox l5
